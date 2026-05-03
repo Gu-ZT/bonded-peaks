@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "dev.dubhe.template.mixin",
+  "package": "dev.dubhe.bonded.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
   ],
