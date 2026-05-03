@@ -30,6 +30,9 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.WeakHashMap;
 import java.util.regex.Pattern;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -81,7 +84,6 @@ public class TeamManager {
         }
     }
 
-    @SuppressWarnings("resource")
     public void onPlayerLogin(ServerPlayer player) {
         this.rememberPlayer(new NameAndId(player.getUUID(), player.getGameProfile().name()));
         this.purgeExpiredInvites(System.currentTimeMillis());
@@ -418,7 +420,7 @@ public class TeamManager {
 
         try (Reader reader = Files.newBufferedReader(this.playersFile, StandardCharsets.UTF_8)) {
             PlayersStorageData data = GSON.fromJson(reader, PlayersStorageData.class);
-            if (data == null || data.knownPlayerNames == null) {
+            if (data == null) {
                 return;
             }
             data.knownPlayerNames.forEach((uuid, name) -> this.knownPlayerNames.put(UUID.fromString(uuid), name));
@@ -475,10 +477,11 @@ public class TeamManager {
     }
 
     private static StoredTeam toStoredTeam(Team team) {
-        StoredTeam storedTeam = new StoredTeam();
-        storedTeam.name = team.getName();
-        storedTeam.owner = team.getOwner().toString();
-        storedTeam.createTime = team.getCreateTime();
+        StoredTeam storedTeam = StoredTeam.builder()
+            .name(team.getName())
+            .owner(team.getOwner().toString())
+            .createTime(team.getCreateTime())
+            .build();
         for (UUID memberId : team.getMembers()) {
             storedTeam.members.add(memberId.toString());
         }
@@ -486,7 +489,7 @@ public class TeamManager {
     }
 
     private static Team fromStoredTeam(@Nullable StoredTeam storedTeam) {
-        if (storedTeam == null || storedTeam.name == null || storedTeam.owner == null || storedTeam.members == null) {
+        if (storedTeam == null) {
             throw new IllegalArgumentException("Invalid team storage data.");
         }
         UUID owner = UUID.fromString(storedTeam.owner);
@@ -528,11 +531,13 @@ public class TeamManager {
     }
 
 
+    @Builder
+    @AllArgsConstructor
     private static final class StoredTeam {
-        private String name;
-        private String owner;
-        private List<String> members = new ArrayList<>();
-        private long createTime;
+        private final String name;
+        private final String owner;
+        private final List<String> members = new ArrayList<>();
+        private final long createTime;
     }
 
     private static final class PlayersStorageData {
