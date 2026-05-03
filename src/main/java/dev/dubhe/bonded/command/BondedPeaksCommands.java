@@ -21,8 +21,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-@SuppressWarnings("resource")
 @Slf4j
+@SuppressWarnings("resource")
 public final class BondedPeaksCommands {
     private BondedPeaksCommands() {
     }
@@ -34,7 +34,7 @@ public final class BondedPeaksCommands {
                 .then(
                     Commands.literal("create")
                         .then(
-                            Commands.argument("name", StringArgumentType.word())
+                            Commands.argument("name", StringArgumentType.greedyString())
                                 .executes(BondedPeaksCommands::createTeam)
                         )
                 )
@@ -87,7 +87,7 @@ public final class BondedPeaksCommands {
                     Commands.literal("info")
                         .executes(BondedPeaksCommands::showOwnTeamInfo)
                         .then(
-                            Commands.argument("name", StringArgumentType.word())
+                            Commands.argument("name", StringArgumentType.greedyString())
                                 .executes(BondedPeaksCommands::showNamedTeamInfo)
                         )
                 )
