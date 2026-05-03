@@ -50,7 +50,6 @@ public class TeamManager {
     private final Path storageDirectory;
     private final Path teamsDirectory;
     private final Path playersFile;
-    private final Path legacyStorageFile;
     private final Map<String, Team> teamsByName = new LinkedHashMap<>();
     private final Map<UUID, String> teamByMember = new LinkedHashMap<>();
     private final Map<UUID, List<TeamInvite>> invitesByTarget = new LinkedHashMap<>();
@@ -64,7 +63,6 @@ public class TeamManager {
             .resolve(BondedPeaks.MOD_ID);
         this.teamsDirectory = this.storageDirectory.resolve("teams");
         this.playersFile = this.storageDirectory.resolve("players.json");
-        this.legacyStorageFile = this.storageDirectory.resolve("teams.json");
         this.load();
     }
 
@@ -379,12 +377,6 @@ public class TeamManager {
 
         this.loadPlayers();
         this.loadTeams();
-
-        // Compatibility path: import old single-file layout once if no team file exists.
-        if (this.teamsByName.isEmpty() && Files.exists(this.legacyStorageFile)) {
-            this.loadLegacyStorage();
-            this.save();
-        }
     }
 
     private void save() {
@@ -463,34 +455,6 @@ public class TeamManager {
         }
     }
 
-    private void loadLegacyStorage() {
-        try (Reader reader = Files.newBufferedReader(this.legacyStorageFile, StandardCharsets.UTF_8)) {
-            LegacyStorageData data = GSON.fromJson(reader, LegacyStorageData.class);
-            if (data == null) {
-                return;
-            }
-
-            if (data.knownPlayerNames != null) {
-                data.knownPlayerNames.forEach((uuid, name) -> this.knownPlayerNames.put(UUID.fromString(uuid), name));
-            }
-            if (data.teams != null) {
-                for (StoredTeam storedTeam : data.teams) {
-                    Team team = fromStoredTeam(storedTeam);
-                    String teamKey = normalizeTeamName(team.getName());
-                    if (this.teamsByName.containsKey(teamKey)) {
-                        continue;
-                    }
-                    this.teamsByName.put(teamKey, team);
-                    for (UUID memberId : team.getMembers()) {
-                        this.teamByMember.put(memberId, teamKey);
-                    }
-                }
-            }
-        } catch (IOException | JsonParseException | IllegalArgumentException exception) {
-            LOGGER.error("Failed to load legacy bonded peaks team data from {}", this.legacyStorageFile, exception);
-        }
-    }
-
     private void writeJson(Path path, Object data) throws IOException {
         try (Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
             GSON.toJson(data, writer);
@@ -563,10 +527,6 @@ public class TeamManager {
         }
     }
 
-    private static final class LegacyStorageData {
-        private List<StoredTeam> teams = new ArrayList<>();
-        private Map<String, String> knownPlayerNames = new LinkedHashMap<>();
-    }
 
     private static final class StoredTeam {
         private String name;
