@@ -1,0 +1,17 @@
+[versions]
+minecraft = "26.1.2"
+neoForge = "26.1.2.8-beta"
+lombokPlugin = "9.2.0"
+lombok = "1.18.44"
+modDevGradle = "2.0.140"
+jsr305 = "3.0.2"
+jei = "29.5.0.26"
+
+[libraries]
+jsr305 = { group = "com.google.code.findbugs", name = "jsr305", version.ref = "jsr305" }
+jeiApi = { group = "mezz.jei", name = "jei-26.1.2-neoforge-api", version.ref = "jei" }
+jei = { group = "mezz.jei", name = "jei-26.1.2-neoforge", version.ref = "jei" }
+
+[plugins]
+modDevGradle = { id = "net.neoforged.moddev", version.ref = "modDevGradle" }
+lombok = { id = "io.freefair.lombok", version.ref = "lombokPlugin" }
