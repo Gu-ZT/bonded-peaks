@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+@SuppressWarnings("resource")
 @Slf4j
 public final class BondedPeaksCommands {
     private BondedPeaksCommands() {
@@ -120,7 +121,7 @@ public final class BondedPeaksCommands {
         NameAndId owner = nameAndId(player);
 
         try {
-            Team team = manager.createTeam(owner, teamName, System.currentTimeMillis());
+            Team team = manager.createTeam(owner, teamName, context.getSource().getServer().overworld().getGameTime());
             BondedPeaksCommands.sendSuccess(
                 context.getSource(),
                 Component.translatable("commands.bonded_peaks.create.success", team.getName())
@@ -139,7 +140,7 @@ public final class BondedPeaksCommands {
 
         try {
             NameAndId target = resolveSingleProfile(context, "player");
-            Team team = manager.invite(inviter, target, System.currentTimeMillis());
+            Team team = manager.invite(inviter, target, context.getSource().getServer().overworld().getGameTime());
             BondedPeaksCommands.sendSuccess(
                 context.getSource(),
                 Component.translatable("commands.bonded_peaks.invite.sent", target.name())
@@ -175,7 +176,7 @@ public final class BondedPeaksCommands {
         NameAndId target = BondedPeaksCommands.nameAndId(player);
 
         try {
-            Team team = manager.acceptInvite(target, inviterId, System.currentTimeMillis());
+            Team team = manager.acceptInvite(target, inviterId, context.getSource().getServer().overworld().getGameTime());
             Component joinedMessage = Component.translatable("commands.bonded_peaks.accept.success", team.getName());
             player.sendSystemMessage(joinedMessage);
             Component notice = Component.translatable("commands.bonded_peaks.member.joined", target.name(), team.getName());
@@ -218,7 +219,7 @@ public final class BondedPeaksCommands {
         TeamManager manager = TeamManager.get(context.getSource().getServer());
 
         try {
-            manager.beginDisband(nameAndId(player), System.currentTimeMillis());
+            manager.beginDisband(nameAndId(player), context.getSource().getServer().overworld().getGameTime());
             BondedPeaksCommands.sendSuccess(context.getSource(), Component.translatable("commands.bonded_peaks.disband.pending"));
             return 1;
         } catch (TeamException exception) {

@@ -74,9 +74,10 @@ public class TeamManager {
         }
     }
 
+    @SuppressWarnings("resource")
     public void onPlayerLogin(ServerPlayer player) {
         this.rememberPlayer(new NameAndId(player.getUUID(), player.getGameProfile().name()));
-        this.purgeExpiredInvites(System.currentTimeMillis());
+        this.purgeExpiredInvites(player.level().getServer().overworld().getGameTime());
         List<TeamInvite> invites = this.invitesByTarget.getOrDefault(player.getUUID(), List.of());
         for (TeamInvite invite : invites) {
             Team team = this.getTeamByName(invite.teamName()).orElse(null);
