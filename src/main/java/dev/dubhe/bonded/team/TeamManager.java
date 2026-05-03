@@ -33,6 +33,8 @@ import java.util.regex.Pattern;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -492,12 +494,12 @@ public class TeamManager {
         if (storedTeam == null) {
             throw new IllegalArgumentException("Invalid team storage data.");
         }
-        UUID owner = UUID.fromString(storedTeam.owner);
+        UUID owner = UUID.fromString(storedTeam.owner());
         List<UUID> members = new ArrayList<>();
-        for (String member : storedTeam.members) {
+        for (String member : storedTeam.members()) {
             members.add(UUID.fromString(member));
         }
-        return new Team(storedTeam.name, owner, members, storedTeam.createTime);
+        return new Team(storedTeam.name(), owner, members, storedTeam.createTime());
     }
 
     private static String normalizeTeamName(String name) {
@@ -533,6 +535,8 @@ public class TeamManager {
 
     @Builder
     @AllArgsConstructor
+    @Accessors(fluent = true)
+    @Getter
     private static final class StoredTeam {
         private final String name;
         private final String owner;
