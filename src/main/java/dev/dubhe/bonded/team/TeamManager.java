@@ -181,6 +181,7 @@ public class TeamManager {
         return team;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public Team beginDisband(NameAndId player, long now) throws TeamException {
         this.rememberPlayer(player);
         Team team = this.getRequiredTeamFor(player.id());
@@ -294,7 +295,7 @@ public class TeamManager {
         return TIME_FORMATTER.format(Instant.ofEpochMilli(createTime).atZone(ZoneId.systemDefault()));
     }
 
-    public static void validateTeamName(String name) throws TeamException {
+    public static void validateTeamName(@Nullable String name) throws TeamException {
         if (name == null || name.isBlank()) {
             throw new TeamException("commands.bonded_peaks.create.invalid_blank");
         }
@@ -375,22 +376,18 @@ public class TeamManager {
             this.teamByMember.clear();
             this.knownPlayerNames.clear();
 
-            if (data.knownPlayerNames != null) {
-                data.knownPlayerNames.forEach((uuid, name) -> this.knownPlayerNames.put(UUID.fromString(uuid), name));
-            }
-            if (data.teams != null) {
-                for (StoredTeam storedTeam : data.teams) {
-                    UUID owner = UUID.fromString(storedTeam.owner);
-                    List<UUID> members = new ArrayList<>();
-                    for (String member : storedTeam.members) {
-                        members.add(UUID.fromString(member));
-                    }
-                    Team team = new Team(storedTeam.name, owner, members, storedTeam.createTime);
-                    String teamKey = normalizeTeamName(team.getName());
-                    this.teamsByName.put(teamKey, team);
-                    for (UUID memberId : team.getMembers()) {
-                        this.teamByMember.put(memberId, teamKey);
-                    }
+            data.knownPlayerNames.forEach((uuid, name) -> this.knownPlayerNames.put(UUID.fromString(uuid), name));
+            for (StoredTeam storedTeam : data.teams) {
+                UUID owner = UUID.fromString(storedTeam.owner);
+                List<UUID> members = new ArrayList<>();
+                for (String member : storedTeam.members) {
+                    members.add(UUID.fromString(member));
+                }
+                Team team = new Team(storedTeam.name, owner, members, storedTeam.createTime);
+                String teamKey = normalizeTeamName(team.getName());
+                this.teamsByName.put(teamKey, team);
+                for (UUID memberId : team.getMembers()) {
+                    this.teamByMember.put(memberId, teamKey);
                 }
             }
         } catch (IOException | JsonParseException | IllegalArgumentException exception) {
@@ -404,10 +401,11 @@ public class TeamManager {
             data.knownPlayerNames.put(entry.getKey().toString(), entry.getValue());
         }
         for (Team team : this.teamsByName.values()) {
-            StoredTeam storedTeam = new StoredTeam();
-            storedTeam.name = team.getName();
-            storedTeam.owner = team.getOwner().toString();
-            storedTeam.createTime = team.getCreateTime();
+            StoredTeam storedTeam = new StoredTeam(
+                team.getName(),
+                team.getOwner().toString(),
+                team.getCreateTime()
+            );
             for (UUID memberId : team.getMembers()) {
                 storedTeam.members.add(memberId.toString());
             }
@@ -455,15 +453,21 @@ public class TeamManager {
     }
 
     private static final class StorageData {
-        private List<StoredTeam> teams = new ArrayList<>();
-        private Map<String, String> knownPlayerNames = new LinkedHashMap<>();
+        private final List<StoredTeam> teams = new ArrayList<>();
+        private final Map<String, String> knownPlayerNames = new LinkedHashMap<>();
     }
 
     private static final class StoredTeam {
-        private String name;
-        private String owner;
-        private List<String> members = new ArrayList<>();
-        private long createTime;
+        private final String name;
+        private final String owner;
+        private final List<String> members = new ArrayList<>();
+        private final long createTime;
+
+        private StoredTeam(String name, String owner, long createTime) {
+            this.name = name;
+            this.owner = owner;
+            this.createTime = createTime;
+        }
     }
 }
 

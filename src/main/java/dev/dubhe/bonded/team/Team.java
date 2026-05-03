@@ -1,5 +1,7 @@
 package dev.dubhe.bonded.team;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,9 +9,12 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Team {
+    @Getter
     private final String name;
+    @Getter
     private UUID owner;
     private final List<UUID> members;
+    @Getter
     private final long createTime;
 
     public Team(String name, UUID owner, List<UUID> members, long createTime) {
@@ -26,26 +31,15 @@ public class Team {
         return new Team(name, owner, List.of(owner), createTime);
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public UUID getOwner() {
-        return this.owner;
-    }
-
     public List<UUID> getMembers() {
         return Collections.unmodifiableList(this.members);
-    }
-
-    public long getCreateTime() {
-        return this.createTime;
     }
 
     public boolean isOwner(UUID playerId) {
         return this.owner.equals(playerId);
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean hasMember(UUID playerId) {
         return this.members.contains(playerId);
     }
