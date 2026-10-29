@@ -287,6 +287,15 @@ public class TeamManager {
         return players;
     }
 
+    /** 返回仍有效且队长未变更的邀请，用于玩家自己的邀请列表。 */
+    public List<TeamInvite> getInvitesFor(UUID playerId, long now) {
+        this.purgeExpiredInvites(now);
+        return this.invitesByTarget.getOrDefault(playerId, List.of()).stream()
+            .filter(invite -> this.getTeamByName(invite.teamName())
+                .filter(team -> team.isOwner(invite.inviterId())).isPresent())
+            .toList();
+    }
+
     public String resolvePlayerName(UUID playerId) {
         ServerPlayer player = this.server.getPlayerList().getPlayer(playerId);
         if (player != null) {

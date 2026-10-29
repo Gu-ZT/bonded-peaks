@@ -140,7 +140,7 @@ public final class BondedPeaksCommands {
 
         try {
             NameAndId target = resolveSingleProfile(context, "player");
-            Team team = manager.invite(inviter, target, context.getSource().getServer().overworld().getGameTime());
+            Team team = manager.invite(inviter, target, System.currentTimeMillis());
             BondedPeaksCommands.sendSuccess(
                 context.getSource(),
                 Component.translatable("commands.bonded_peaks.invite.sent", target.name())
@@ -176,7 +176,7 @@ public final class BondedPeaksCommands {
         NameAndId target = BondedPeaksCommands.nameAndId(player);
 
         try {
-            Team team = manager.acceptInvite(target, inviterId, context.getSource().getServer().overworld().getGameTime());
+            Team team = manager.acceptInvite(target, inviterId, System.currentTimeMillis());
             Component joinedMessage = Component.translatable("commands.bonded_peaks.accept.success", team.getName());
             player.sendSystemMessage(joinedMessage);
             Component notice = Component.translatable("commands.bonded_peaks.member.joined", target.name(), team.getName());

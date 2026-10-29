@@ -5,15 +5,16 @@ lombokPlugin = "9.2.0"
 lombok = "1.18.44"
 modDevGradle = "2.0.140"
 jsr305 = "3.0.2"
-anvillib = "2.0.0+snapshot.336"
+anvillib = "2.0.0+snapshot.548"
 
 [libraries]
 anvillib-network = { group = "dev.anvilcraft.lib", name = "anvillib-network-neoforge-26.1", version.ref = "anvillib" }
 anvillib-config = { group = "dev.anvilcraft.lib", name = "anvillib-config-neoforge-26.1", version.ref = "anvillib" }
+anvillib-rendering = { group = "dev.anvilcraft.lib", name = "anvillib-rendering-neoforge-26.1", version.ref = "anvillib" }
 jsr305 = { group = "com.google.code.findbugs", name = "jsr305", version.ref = "jsr305" }
 
 [bundles]
-anvillib = ['anvillib-network', 'anvillib-config']
+anvillib = ['anvillib-network', 'anvillib-config', 'anvillib-rendering']
 
 [plugins]
 modDevGradle = { id = "net.neoforged.moddev", version.ref = "modDevGradle" }
