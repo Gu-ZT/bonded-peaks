@@ -28,9 +28,9 @@ Current version: `0.0.1` (early development)
 | Item | Requirement |
 |---|---|
 | Minecraft | 1.21.11 (declared range `[1.21.11, 1.21.12)`) |
-| NeoForge | 21.11.48 or newer (declared range `[21.11.45,)`) |
+| NeoForge | 21.11.45 or newer; built with 21.11.48 (declared range `[21.11.45,)`) |
 | Java | JDK 21 required to build |
-| Dependencies | AnvilLib (network, config modules), bundled via JarJar — no separate install |
+| Dependencies | AnvilLib (network, config, rendering, integration modules), bundled via JarJar — no separate install |
 
 ## Installation
 
@@ -138,6 +138,8 @@ Data is saved automatically on every change; backing up the world save backs up 
 ## Building from Source
 
 Requirements: JDK 21 + Git
+
+构建前请按 [联动构建说明](docs/CONFIG.md) 准备同级 Aleeve Atlas 源码，或传入 `-PaleeveAtlasDir=<源码目录>`。运行时可以单独安装本模组。
 
 ```bash
 git clone <repository-url>

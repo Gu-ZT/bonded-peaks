@@ -9,3 +9,11 @@ pluginManagement {
 plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
 }
+
+rootProject.name = 'bonded-peaks'
+
+includeBuild(providers.gradleProperty('aleeveAtlasDir').orElse('../aleeve-atlas').get()) {
+    dependencySubstitution {
+        substitute module('dev.dubhe.map:aleeve_atlas-neoforge-1.21.11') using project(':')
+    }
+}

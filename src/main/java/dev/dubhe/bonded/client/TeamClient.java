@@ -7,6 +7,7 @@ import dev.dubhe.bonded.network.TeamAction;
 import dev.dubhe.bonded.network.TeamPackets;
 import dev.dubhe.bonded.network.TeamReply;
 import dev.dubhe.bonded.network.TeamSnapshot;
+import dev.dubhe.bonded.network.TeamRoster;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -47,6 +48,7 @@ public final class TeamClient {
 
     @SubscribeEvent
     public static void registerPayloads(RegisterClientPayloadHandlersEvent event) {
+        event.register(TeamRoster.TYPE, (roster, context) -> ClientTeamRoster.update(roster));
         event.register(TeamSnapshot.TYPE, (snapshot, context) -> {
             if (!chatTeam.equals(snapshot.name())) {
                 MESSAGES.clear();
@@ -94,6 +96,7 @@ public final class TeamClient {
 
     @SubscribeEvent
     public static void logout(ClientPlayerNetworkEvent.LoggingOut event) {
+        ClientTeamRoster.update(TeamRoster.EMPTY);
         MESSAGES.clear();
         chatTeam = "";
     }

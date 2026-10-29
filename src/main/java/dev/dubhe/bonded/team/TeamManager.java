@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.mojang.logging.LogUtils;
 import dev.dubhe.bonded.BondedPeaks;
+import dev.dubhe.bonded.network.TeamRosterSync;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
@@ -121,7 +122,7 @@ public class TeamManager {
         this.teamByMember.put(owner.id(), teamKey);
         this.clearIncomingInvites(owner.id());
         this.pendingDisbands.remove(owner.id());
-        this.save();
+        this.changed();
         return team;
     }
 
@@ -175,7 +176,7 @@ public class TeamManager {
         this.teamByMember.put(target.id(), normalizeTeamName(team.getName()));
         this.clearIncomingInvites(target.id());
         this.pendingDisbands.remove(target.id());
-        this.save();
+        this.changed();
         return team;
     }
 
@@ -189,7 +190,7 @@ public class TeamManager {
         team.removeMember(player.id());
         this.teamByMember.remove(player.id());
         this.pendingDisbands.remove(player.id());
-        this.save();
+        this.changed();
         return team;
     }
 
@@ -236,7 +237,7 @@ public class TeamManager {
         team.removeMember(targetId);
         this.teamByMember.remove(targetId);
         this.pendingDisbands.remove(targetId);
-        this.save();
+        this.changed();
         return team;
     }
 
@@ -257,7 +258,7 @@ public class TeamManager {
         this.pendingDisbands.remove(owner.id());
         this.pendingDisbands.remove(targetId);
         this.removeInvitesForTeam(team.getName());
-        this.save();
+        this.changed();
         return team;
     }
 
@@ -346,7 +347,7 @@ public class TeamManager {
             this.pendingDisbands.remove(memberId);
         }
         this.removeInvitesForTeam(team.getName());
-        this.save();
+        this.changed();
     }
 
     private void clearIncomingInvites(UUID targetId) {
@@ -390,6 +391,11 @@ public class TeamManager {
 
         this.loadPlayers();
         this.loadTeams();
+    }
+
+    private void changed() {
+        this.save();
+        TeamRosterSync.broadcast(this.server);
     }
 
     private void save() {

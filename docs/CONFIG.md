@@ -17,3 +17,17 @@
 固定界面文本必须使用 `Component.translatable(...)`。英文文本在 `BondedPeaksLangProvider` 中定义，通过 `./gradlew.bat runData --console=plain` 生成 `src/generated/resources/assets/bonded_peaks/lang/en_us.json`；简体中文必须手动维护 `src/main/resources/assets/bonded_peaks/lang/zh_cn.json`。
 
 本界面没有新增配置文件或服务端配置项。
+
+# Aleeve Atlas 联动
+
+AnvilLib Integration 随主模组内嵌。客户端与服务端同时安装 Aleeve Atlas 和本模组后，Atlas 的 `team.provider=auto` 自动选用 `bonded_peaks`，也可显式设置 `team.provider=bonded_peaks`。显式设置 `vanilla` 时继续使用 Atlas 的原版队伍实现。
+
+Atlas 的队友位置、地图增量同步、共享路径点、队伍标点和雷达同队判定均读取山河同契成员关系。未加入山河同契队伍的玩家不会因原版计分板队伍相同而被判定为队友。队伍显示名沿用山河同契名称，队伍颜色为白色。
+
+公开成员表在登录、创建队伍、接受邀请、退出、移出成员、转让队长和解散后同步。成员表不包含邀请与聊天内容。客户端收到新成员表后立即通知 Atlas 在线成员变化；断开连接时清空缓存。服务端判定从当前服务器查询，客户端只使用服务端同步的数据。
+
+# 构建联动适配器
+
+编译期通过 Gradle 复合构建读取 Aleeve Atlas 源码，运行时仍为可选联动。必须将 `https://github.com/Gu-ZT/aleeve-atlas` 的提交 `7497d493719c84fb166e506b85bb79f673622129` 检出到同级目录 `../aleeve-atlas`，再执行构建；也可通过 `-PaleeveAtlasDir=<源码目录>` 指定目录。持续集成工作流自动检出该提交。
+
+开发构建使用 NeoForge 21.11.48。验证最低兼容版本时执行 `./gradlew.bat compileJava test runData '-PneoForgeVersion=21.11.45' --console=plain`。

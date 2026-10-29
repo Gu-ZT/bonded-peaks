@@ -1,6 +1,6 @@
 neoForge {
     // Specify the version of NeoForge to use.
-    version = libs.versions.neoForge.get()
+    version = providers.gradleProperty('neoForgeVersion').getOrElse(libs.versions.neoForge.get())
 
     // This line is optional. Access Transformers are automatically detected
     // accessTransformers.add('src/main/resources/META-INF/accesstransformer.cfg')
@@ -72,5 +72,10 @@ neoForge {
         "${mod_id}" {
             sourceSet(sourceSets.main)
         }
+    }
+
+    unitTest {
+        enable()
+        testedMod = mods.getByName(project.mod_id)
     }
 }

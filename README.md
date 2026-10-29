@@ -23,15 +23,16 @@
 - 队伍列表与详情查询，离线成员名通过缓存显示
 - 数据自动持久化，随世界存档保存
 - 按 `G` 或输入 `/bpui` 打开队伍界面，支持成员管理、聊天、邀请与操作确认
+- 与 Aleeve Atlas 联动，使用本模组队伍判定地图共享、队友位置、路径点、标点与雷达
 
 ## 环境要求
 
 | 项目 | 要求 |
 |---|---|
 | Minecraft | 1.21.11（声明兼容范围 `[1.21.11, 1.21.12)`） |
-| NeoForge | 21.11.48 或更新（声明兼容范围 `[21.11.45,)`） |
+| NeoForge | 最低 21.11.45，构建使用 21.11.48（声明兼容范围 `[21.11.45,)`） |
 | Java | 构建需要 JDK 21 |
-| 前置依赖 | AnvilLib（network、config、rendering 模块），已通过 JarJar 内嵌，无需单独安装 |
+| 前置依赖 | AnvilLib（network、config、rendering、integration 模块），已通过 JarJar 内嵌，无需单独安装 |
 
 ## 安装方法
 
@@ -139,6 +140,8 @@
 ## 从源码构建
 
 环境要求：JDK 21 + Git
+
+构建前必须按 [联动构建说明](docs/CONFIG.md) 准备同级 Aleeve Atlas 源码，或传入 `-PaleeveAtlasDir=<源码目录>`。Atlas 仅作为编译依赖，运行本模组时可以单独安装。
 
 ```bash
 git clone <仓库地址>

@@ -23,6 +23,13 @@ ordering = "NONE"
 side = "BOTH"
 
 [[dependencies."${mod_id}"]]
+modId = "aleeve_atlas"
+type = "optional"
+versionRange = "[0.0.1,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies."${mod_id}"]]
 modId = "minecraft"
 type = "required"
 versionRange = "${minecraft_version_range}"

@@ -32,6 +32,7 @@ public final class TeamPackets {
         registrar.playToServer(TeamAction.TYPE, TeamAction.CODEC, TeamActions::execute);
         registrar.playToClient(TeamSnapshot.TYPE, TeamSnapshot.CODEC);
         registrar.playToClient(TeamReply.TYPE, TeamReply.CODEC);
+        registrar.playToClient(TeamRoster.TYPE, TeamRoster.CODEC);
     }
 
     private static void snapshot(Request request, IPayloadContext context) {

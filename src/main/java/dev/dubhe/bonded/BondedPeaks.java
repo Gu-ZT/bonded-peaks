@@ -1,10 +1,14 @@
 package dev.dubhe.bonded;
 
+import dev.anvilcraft.lib.v2.integration.IntegrationManager;
 import dev.dubhe.bonded.command.BondedPeaksCommands;
+import dev.dubhe.bonded.network.TeamRosterSync;
 import dev.dubhe.bonded.team.TeamManager;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -20,6 +24,14 @@ public class BondedPeaks {
     public BondedPeaks(IEventBus modEventBus, ModContainer modContainer) {
         Objects.requireNonNull(modEventBus, "modEventBus");
         Objects.requireNonNull(modContainer, "modContainer");
+        IntegrationManager integrations = new IntegrationManager(MOD_ID);
+        integrations.compileContent();
+        modEventBus.addListener((FMLCommonSetupEvent event) -> event.enqueueWork(() -> {
+            integrations.loadAllIntegrations();
+            if (FMLEnvironment.getDist().isClient()) {
+                integrations.loadAllClientIntegrations();
+            }
+        }));
         NeoForge.EVENT_BUS.addListener(BondedPeaks::onRegisterCommands);
         NeoForge.EVENT_BUS.addListener(BondedPeaks::onPlayerLogin);
         NeoForge.EVENT_BUS.addListener(BondedPeaks::onPlayerLogout);
@@ -33,6 +45,7 @@ public class BondedPeaks {
     private static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player) {
             TeamManager.get(player.level().getServer()).onPlayerLogin(player);
+            TeamRosterSync.sendTo(player);
         }
     }
 
