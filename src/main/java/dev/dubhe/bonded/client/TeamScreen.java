@@ -3,7 +3,7 @@ package dev.dubhe.bonded.client;
 import dev.dubhe.bonded.network.TeamAction;
 import dev.dubhe.bonded.network.TeamReply;
 import dev.dubhe.bonded.network.TeamSnapshot;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
@@ -329,12 +329,12 @@ final class TeamScreen extends Screen {
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         graphics.fill(0, 0, this.width, this.height, 0xB0081018);
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         graphics.fill(this.left - 1, this.top - 1, this.right() + 1, this.bottom() + 1, 0xFF53656C);
         graphics.fill(this.left, this.top, this.right(), this.bottom(), 0xF018252F);
         graphics.fill(this.left, this.top, this.right(), this.top + 46, 0xFF243843);
@@ -351,8 +351,8 @@ final class TeamScreen extends Screen {
         } else if (this.page == Page.INVITES) {
             this.drawInvites(graphics);
         } else if (this.snapshot.name().isEmpty()) {
-            graphics.centeredText(this.font, text("no_team"), this.width / 2, this.contentTop() + 10, TEXT);
-            graphics.centeredText(this.font, text("create_hint"), this.width / 2, this.contentTop() + 30, MUTED);
+            graphics.drawCenteredString(this.font, text("no_team"), this.width / 2, this.contentTop() + 10, TEXT);
+            graphics.drawCenteredString(this.font, text("create_hint"), this.width / 2, this.contentTop() + 30, MUTED);
         } else if (this.page == Page.MEMBERS) {
             this.drawMember(graphics);
         } else {
@@ -362,10 +362,10 @@ final class TeamScreen extends Screen {
             int statusWidth = this.snapshot.name().isEmpty() ? this.panelWidth - 24 : this.panelWidth - 150;
             this.label(graphics, this.status, this.left + 12, this.bottom() - 24, statusWidth, MUTED);
         }
-        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
+        super.render(graphics, mouseX, mouseY, partialTick);
     }
 
-    private void drawMember(GuiGraphicsExtractor graphics) {
+    private void drawMember(GuiGraphics graphics) {
         TeamSnapshot.Member member = this.selectedMember();
         if (member == null) {
             return;
@@ -379,7 +379,7 @@ final class TeamScreen extends Screen {
         this.scrollbar(graphics, this.snapshot.members().size());
     }
 
-    private void drawInvites(GuiGraphicsExtractor graphics) {
+    private void drawInvites(GuiGraphics graphics) {
         TeamSnapshot.Invite invite = this.selectedInvitation();
         if (invite == null) {
             this.empty(graphics, "no_invites");
@@ -401,7 +401,7 @@ final class TeamScreen extends Screen {
         return lines;
     }
 
-    private void drawChat(GuiGraphicsExtractor graphics) {
+    private void drawChat(GuiGraphics graphics) {
         List<FormattedCharSequence> lines = this.chatLines();
         if (lines.isEmpty()) {
             this.empty(graphics, "chat_empty");
@@ -410,24 +410,24 @@ final class TeamScreen extends Screen {
         this.chatScroll = Math.clamp(this.chatScroll, 0, Math.max(0, lines.size() - visible));
         int start = Math.max(0, lines.size() - visible - this.chatScroll);
         for (int i = 0; i < visible && start + i < lines.size(); i++) {
-            graphics.text(this.font, lines.get(start + i), this.left + 18, this.contentTop() + 4 + i * 12, TEXT, false);
+            graphics.drawString(this.font, lines.get(start + i), this.left + 18, this.contentTop() + 4 + i * 12, TEXT, false);
         }
         this.label(graphics, this.status, this.left + 16, this.bottom() - 52, this.panelWidth - 32, MUTED);
         graphics.fill(this.left + 12, this.bottom() - 34, this.right() - 90, this.bottom() - 10, 0xFF0C171F);
         graphics.fill(this.left + 12, this.bottom() - 11, this.right() - 90, this.bottom() - 10, 0xFF719D9D);
     }
 
-    private void empty(GuiGraphicsExtractor graphics, String key) {
-        graphics.textWithWordWrap(this.font, text(key), this.left + 24, this.contentTop() + 22, this.panelWidth - 48, MUTED, false);
+    private void empty(GuiGraphics graphics, String key) {
+        graphics.drawWordWrap(this.font, text(key), this.left + 24, this.contentTop() + 22, this.panelWidth - 48, MUTED, false);
     }
 
-    private void label(GuiGraphicsExtractor graphics, Component value, int x, int y, int available, int color) {
+    private void label(GuiGraphics graphics, Component value, int x, int y, int available, int color) {
         graphics.enableScissor(x, y, x + Math.max(0, available), y + this.font.lineHeight);
-        graphics.text(this.font, value, x, y, color, false);
+        graphics.drawString(this.font, value, x, y, color, false);
         graphics.disableScissor();
     }
 
-    private void scrollbar(GuiGraphicsExtractor graphics, int count) {
+    private void scrollbar(GuiGraphics graphics, int count) {
         if (count <= this.visibleRows()) {
             return;
         }

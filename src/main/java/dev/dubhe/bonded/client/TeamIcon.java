@@ -1,12 +1,12 @@
 package dev.dubhe.bonded.client;
 
 import dev.anvilcraft.lib.v2.rendering.sdf.SdfGraphics;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 
 enum TeamIcon {
     PEAKS, MEMBER, CROWN, CHAT, INVITE, SEND, LEAVE, CLOSE, CHECK, REMOVE;
 
-    void draw(GuiGraphicsExtractor graphics, int x, int y, int size) {
+    void draw(GuiGraphics graphics, int x, int y, int size) {
         graphics.pose().pushMatrix();
         graphics.pose().translate(x, y).scale(size / 24f);
         for (int pass = 0; pass < 2; pass++) {
@@ -60,22 +60,22 @@ enum TeamIcon {
         graphics.pose().popMatrix();
     }
 
-    private static void circle(GuiGraphicsExtractor graphics, float x, float y, float radius, float edge, int color) {
+    private static void circle(GuiGraphics graphics, float x, float y, float radius, float edge, int color) {
         SdfGraphics.getInstance().reset().circle(x, y, radius + edge).center(true).color(color).smooth(0.5f).draw(graphics);
     }
 
-    private static void box(GuiGraphicsExtractor graphics, float x, float y, float width, float height,
+    private static void box(GuiGraphics graphics, float x, float y, float width, float height,
                             float radius, float edge, int color) {
         SdfGraphics.getInstance().reset().box(x, y, width + edge * 2, height + edge * 2)
             .center(true).round(radius + edge).color(color).smooth(0.5f).draw(graphics);
     }
 
-    private static void triangle(GuiGraphicsExtractor graphics, float x, float y, float radius, float edge, int color) {
+    private static void triangle(GuiGraphics graphics, float x, float y, float radius, float edge, int color) {
         SdfGraphics.getInstance().reset().triangleEquilateral(x, y, radius + edge * 2.4f)
             .center(true).color(color).smooth(0.5f).draw(graphics);
     }
 
-    private static void line(GuiGraphicsExtractor graphics, float x0, float y0, float x1, float y1, float radius, int color) {
+    private static void line(GuiGraphics graphics, float x0, float y0, float x1, float y1, float radius, int color) {
         SdfGraphics.getInstance().reset().segment(x0, y0, x1, y1)
             .center(true).round(radius).color(color).smooth(0.5f).draw(graphics);
     }

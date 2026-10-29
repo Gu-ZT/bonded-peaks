@@ -10,7 +10,7 @@
 
 </div>
 
-**山河同契**（Bonded Peaks）是一个基于 **NeoForge 26.1 / Minecraft 26.1** 的轻量队伍模组。玩家可以创建队伍、邀请好友入队、使用队伍专属聊天，并由队长统一管理成员。所有数据随世界存档持久化保存，服务器重启不丢失。
+**山河同契**（Bonded Peaks）是一个基于 **NeoForge 21.11 / Minecraft 1.21.11** 的轻量队伍模组。玩家可以创建队伍、邀请好友入队、使用队伍专属聊天，并由队长统一管理成员。所有数据随世界存档持久化保存，服务器重启不丢失。
 
 当前版本：`0.0.1`（早期开发版）
 
@@ -28,14 +28,14 @@
 
 | 项目 | 要求 |
 |---|---|
-| Minecraft | 26.1.2（声明兼容范围 `[26.1, 26.2)`） |
-| NeoForge | 26.1.2.8-beta 或更新（声明兼容范围 `[26,)`） |
-| Java | 构建需要 JDK 25 |
+| Minecraft | 1.21.11（声明兼容范围 `[1.21.11, 1.21.12)`） |
+| NeoForge | 21.11.48 或更新（声明兼容范围 `[21.11.45,)`） |
+| Java | 构建需要 JDK 21 |
 | 前置依赖 | AnvilLib（network、config、rendering 模块），已通过 JarJar 内嵌，无需单独安装 |
 
 ## 安装方法
 
-1. 下载 `bonded-peaks-26.1.2-<版本>.jar`（主 jar 即可，依赖已内嵌）
+1. 下载 `bonded-peaks-1.21.11-<版本>.jar`（主 jar 即可，依赖已内嵌）
 2. 放入客户端的 `.minecraft/mods/` 目录，或服务器的 `mods/` 目录
 3. 启动游戏，在聊天框输入 `/bondedpeaks` 查看帮助
 
@@ -138,7 +138,7 @@
 
 ## 从源码构建
 
-环境要求：JDK 25 + Git
+环境要求：JDK 21 + Git
 
 ```bash
 git clone <仓库地址>
@@ -148,8 +148,8 @@ cd bonded-peaks
 
 构建产物位于 `build/libs/`：
 
-- `bonded-peaks-26.1.2-<版本>.jar` — 主 jar
-- `bonded-peaks-26.1.2-<版本>-sources.jar` — 源码 jar
+- `bonded-peaks-1.21.11-<版本>.jar` — 主 jar
+- `bonded-peaks-1.21.11-<版本>-sources.jar` — 源码 jar
 
 开发常用命令：
 

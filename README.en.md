@@ -10,7 +10,7 @@
 
 </div>
 
-**Bonded Peaks** (山河同契) is a lightweight team/party mod for **NeoForge 26.1 / Minecraft 26.1**. Create teams, invite friends to join, talk over a team-only chat channel, and let the team owner manage members. All data is persisted with the world save and survives server restarts.
+**Bonded Peaks** (山河同契) is a lightweight team/party mod for **NeoForge 21.11 / Minecraft 1.21.11**. Create teams, invite friends to join, talk over a team-only chat channel, and let the team owner manage members. All data is persisted with the world save and survives server restarts.
 
 Current version: `0.0.1` (early development)
 
@@ -27,14 +27,14 @@ Current version: `0.0.1` (early development)
 
 | Item | Requirement |
 |---|---|
-| Minecraft | 26.1.2 (declared range `[26.1, 26.2)`) |
-| NeoForge | 26.1.2.8-beta or newer (declared range `[26,)`) |
-| Java | JDK 25 required to build |
+| Minecraft | 1.21.11 (declared range `[1.21.11, 1.21.12)`) |
+| NeoForge | 21.11.48 or newer (declared range `[21.11.45,)`) |
+| Java | JDK 21 required to build |
 | Dependencies | AnvilLib (network, config modules), bundled via JarJar — no separate install |
 
 ## Installation
 
-1. Download `bonded-peaks-26.1.2-<version>.jar` (the main jar only; dependencies are bundled)
+1. Download `bonded-peaks-1.21.11-<version>.jar` (the main jar only; dependencies are bundled)
 2. Place it into the client's `.minecraft/mods/` folder, or the server's `mods/` folder
 3. Launch the game and type `/bondedpeaks` in chat to see the help
 
@@ -137,7 +137,7 @@ Data is saved automatically on every change; backing up the world save backs up 
 
 ## Building from Source
 
-Requirements: JDK 25 + Git
+Requirements: JDK 21 + Git
 
 ```bash
 git clone <repository-url>
@@ -147,8 +147,8 @@ cd bonded-peaks
 
 Artifacts land in `build/libs/`:
 
-- `bonded-peaks-26.1.2-<version>.jar` — main jar
-- `bonded-peaks-26.1.2-<version>-sources.jar` — sources jar
+- `bonded-peaks-1.21.11-<version>.jar` — main jar
+- `bonded-peaks-1.21.11-<version>-sources.jar` — sources jar
 
 Common dev commands:
 

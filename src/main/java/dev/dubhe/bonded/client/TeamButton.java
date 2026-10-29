@@ -1,7 +1,7 @@
 package dev.dubhe.bonded.client;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
@@ -29,7 +29,7 @@ final class TeamButton extends Button {
     }
 
     @Override
-    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         int border = this.isHoveredOrFocused() ? 0xFFB2D7D5 : 0xFF354A55;
         int fill = this.selected ? 0xFF305954 : this.danger ? 0xFF512F39 : 0xFF22333F;
         if (!this.active) {
@@ -50,7 +50,7 @@ final class TeamButton extends Button {
         if (this.width > 28) {
             var font = Minecraft.getInstance().font;
             graphics.enableScissor(textX, this.getY(), this.getRight() - 5, this.getBottom());
-            graphics.text(font, this.getMessage(), textX, this.getY() + 8,
+            graphics.drawString(font, this.getMessage(), textX, this.getY() + 8,
                 this.active ? 0xFFF1F4F5 : 0xFF819099, false);
             graphics.disableScissor();
         }

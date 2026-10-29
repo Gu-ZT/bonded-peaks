@@ -327,7 +327,7 @@ public final class BondedPeaksCommands {
     private static int showOwnTeamInfo(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         return BondedPeaksCommands.preprocessTeamAndPlayer(
             context,
-            (_, manager, team) -> {
+            (player, manager, team) -> {
                 renderTeamInfo(context.getSource(), manager, team);
                 return 1;
             }
@@ -337,7 +337,7 @@ public final class BondedPeaksCommands {
     private static int showNamedTeamInfo(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         return BondedPeaksCommands.preprocessTeamAndPlayer(
             context,
-            (_, manager, team) -> {
+            (player, manager, team) -> {
                 renderTeamInfo(context.getSource(), manager, team);
                 return 1;
             }

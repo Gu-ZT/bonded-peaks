@@ -4,7 +4,7 @@ import dev.dubhe.bonded.network.TeamAction;
 import dev.dubhe.bonded.network.TeamReply;
 import dev.dubhe.bonded.network.TeamSnapshot;
 import dev.dubhe.bonded.team.TeamManager;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
@@ -195,26 +195,26 @@ final class TeamFormScreen extends Screen {
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         graphics.fill(0, 0, this.width, this.height, 0xC0081018);
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         graphics.fill(this.left - 1, this.top - 1, this.left + this.formWidth + 1, this.top + this.formHeight + 1, 0xFF53656C);
         graphics.fill(this.left, this.top, this.left + this.formWidth, this.top + this.formHeight, 0xFF18252F);
         graphics.fill(this.left, this.top, this.left + this.formWidth, this.top + 2, 0xFF89C9B5);
-        graphics.text(this.font, this.title, this.left + 16, this.top + 16, TeamScreen.TEXT, false);
+        graphics.drawString(this.font, this.title, this.left + 16, this.top + 16, TeamScreen.TEXT, false);
         Component description = TeamScreen.text(this.action.key + "_description", this.team,
             this.target == null ? "" : this.target.name());
-        graphics.textWithWordWrap(this.font, description, this.left + 16, this.top + 35, this.formWidth - 32, TeamScreen.MUTED, false);
+        graphics.drawWordWrap(this.font, description, this.left + 16, this.top + 35, this.formWidth - 32, TeamScreen.MUTED, false);
         Component feedback = this.pending ? TeamScreen.text("pending") : this.error;
         if (feedback != null) {
             graphics.enableScissor(this.left + 16, this.top + this.formHeight - 66, this.left + this.formWidth - 16, this.top + this.formHeight - 40);
-            graphics.textWithWordWrap(this.font, feedback, this.left + 16, this.top + this.formHeight - 64, this.formWidth - 32, 0xFFE2B5A8, false);
+            graphics.drawWordWrap(this.font, feedback, this.left + 16, this.top + this.formHeight - 64, this.formWidth - 32, 0xFFE2B5A8, false);
             graphics.disableScissor();
         }
-        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
+        super.render(graphics, mouseX, mouseY, partialTick);
     }
 
     @Override
