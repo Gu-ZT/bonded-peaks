@@ -11,9 +11,3 @@ plugins {
 }
 
 rootProject.name = 'bonded-peaks'
-
-includeBuild(providers.gradleProperty('aleeveAtlasDir').orElse('../aleeve-atlas').get()) {
-    dependencySubstitution {
-        substitute module('dev.dubhe.map:aleeve_atlas-neoforge-1.21.11') using project(':')
-    }
-}
