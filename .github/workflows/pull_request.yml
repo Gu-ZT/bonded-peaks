@@ -18,17 +18,9 @@ jobs:
     env:
       CI_BUILD: true
       PR_BUILD: true
-      ORG_GRADLE_PROJECT_aleeveAtlasDir: .temp/aleeve-atlas
     steps:
       - name: checkout
         uses: actions/checkout@v4
-
-      - name: checkout Atlas API
-        uses: actions/checkout@v4
-        with:
-          repository: Gu-ZT/aleeve-atlas
-          ref: 7497d493719c84fb166e506b85bb79f673622129
-          path: .temp/aleeve-atlas
 
       - name: Read Properties
         id: 'properties'

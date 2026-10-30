@@ -28,6 +28,6 @@ Atlas 的队友位置、地图增量同步、共享路径点、队伍标点和�
 
 # 构建联动适配器
 
-编译期通过 Gradle 复合构建读取 Aleeve Atlas 源码，运行时仍为可选联动。必须将 `https://github.com/Gu-ZT/aleeve-atlas` 的提交 `7497d493719c84fb166e506b85bb79f673622129` 检出到同级目录 `../aleeve-atlas`，再执行构建；也可通过 `-PaleeveAtlasDir=<源码目录>` 指定目录。持续集成工作流自动检出该提交。
+编译期从 `https://server.cjsah.net:1002/maven/` 解析 `dev.dubhe.map:aleeve_atlas-neoforge-1.21.11:0.0.1+build.+`，运行时仍为可选联动。执行 `./gradlew.bat build --console=plain` 即可构建，持续集成也使用该 Maven 依赖。
 
 开发构建使用 NeoForge 21.11.48。验证最低兼容版本时执行 `./gradlew.bat compileJava test runData '-PneoForgeVersion=21.11.45' --console=plain`。
