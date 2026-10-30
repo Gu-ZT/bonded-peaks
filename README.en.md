@@ -16,7 +16,7 @@ Current version: `0.0.1` (early development)
 
 ## Features
 
-- Create and disband teams, team names up to 12 characters
+- Create and disband teams, with team names up to 12 characters
 - Invite-only joining: owner invites → player accepts (invites expire after 60 seconds)
 - Team-only chat: `/bp <message>` quick command
 - Full owner management: kick, transfer ownership, two-step confirmed disband
@@ -115,11 +115,11 @@ The owner cannot leave directly; transfer ownership first, or disband the team.
 
 ### Rules & Limitations
 
-- One team per player; you cannot create or accept invites while already in a team
+- One team per player; you cannot create a team or accept invites while already in a team
 - The invite target must not be in any team; you cannot invite yourself
-- The owner cannot kick themselves (use `leave` or `transfer`) nor transfer ownership to themselves
+- The owner cannot kick themselves (use `leave` or `transfer`) or transfer ownership to themselves
 - A pending disband is cancelled if the owner logs out
-- Invites and pending disbands live in memory only and are **lost on server restart** — invite / disband again
+- Invites and pending disbands live in memory only and are **lost on server restart** — invite or disband again
 - All commands require an in-game player; the console cannot use them
 - No permission system is integrated yet; every player can use all commands
 
@@ -163,11 +163,11 @@ Report issues via GitHub Issues and contribute via Pull Requests (PRs run an aut
 
 ## FAQ
 
-**Q: Messages show as English key names (e.g. `commands.bonded_peaks.help.1`)?**
+**Q: Why do messages appear as raw translation keys (e.g. `commands.bonded_peaks.help.1`)?**
 
 A: The client does not have the mod installed, so it cannot translate the text. Have all players install the mod.
 
-**Q: Accepting an invite says the invite is no longer valid?**
+**Q: Why does accepting an invite say it is no longer valid?**
 
 A: The invite expired (60 s), or the team was disbanded / ownership changed. Ask the owner to invite again.
 

@@ -27,7 +27,7 @@ public class BondedPeaksLangProvider extends LanguageProvider {
         this.add("commands.bonded_peaks.invite.self", "You cannot invite yourself.");
         this.add("commands.bonded_peaks.accept.success", "The bond is forged. You joined \"%s\".");
         this.add("commands.bonded_peaks.accept.none", "There is no active invitation to accept.");
-        this.add("commands.bonded_peaks.accept.not_found", "No matching invitation from that inviter was found.");
+        this.add("commands.bonded_peaks.accept.not_found", "No matching invitation from that player was found.");
         this.add("commands.bonded_peaks.accept.invalidated", "That invitation is no longer valid. Ask for a new one.");
         this.add("commands.bonded_peaks.leave.success", "You have left \"%s\".");
         this.add("commands.bonded_peaks.leave.owner_forbidden", "The owner must transfer leadership or disband the team before leaving.");
@@ -36,11 +36,11 @@ public class BondedPeaksLangProvider extends LanguageProvider {
         this.add("commands.bonded_peaks.confirm.none", "There is no pending disband confirmation.");
         this.add("commands.bonded_peaks.kick.success", "%s has been removed from \"%s\".");
         this.add("commands.bonded_peaks.kick.received", "You have been removed from team \"%s\".");
-        this.add("commands.bonded_peaks.kick.self", "Use leave if you want to leave yourself.");
+        this.add("commands.bonded_peaks.kick.self", "Use leave to leave the team.");
         this.add("commands.bonded_peaks.kick.not_member", "That player is not a member of this team.");
         this.add("commands.bonded_peaks.transfer.success", "Leadership of \"%2$s\" has been transferred to %1$s.");
         this.add("commands.bonded_peaks.transfer.self", "You are already the owner.");
-        this.add("commands.bonded_peaks.transfer.not_member", "That player is not a member of the team.");
+        this.add("commands.bonded_peaks.transfer.not_member", "That player is not a member of this team.");
         this.add("commands.bonded_peaks.list.empty", "There are no teams on this server yet.");
         this.add("commands.bonded_peaks.list.header", "There are %s teams on this server:");
         this.add("commands.bonded_peaks.list.entry", "- \"%s\": %s members, owner %s");
@@ -78,11 +78,11 @@ public class BondedPeaksLangProvider extends LanguageProvider {
         this.add("screen.bonded_peaks.create", "Create team");
         this.add("screen.bonded_peaks.invite", "Invite player");
         this.add("screen.bonded_peaks.accept", "Join team");
-        this.add("screen.bonded_peaks.transfer", "Transfer leader");
+        this.add("screen.bonded_peaks.transfer", "Transfer leadership");
         this.add("screen.bonded_peaks.kick", "Remove member");
         this.add("screen.bonded_peaks.leave", "Leave team");
         this.add("screen.bonded_peaks.disband", "Disband team");
-        this.add("screen.bonded_peaks.owner", "Team leader");
+        this.add("screen.bonded_peaks.owner", "Team owner");
         this.add("screen.bonded_peaks.member", "Member");
         this.add("screen.bonded_peaks.online", "Online");
         this.add("screen.bonded_peaks.offline", "Offline");
@@ -97,7 +97,7 @@ public class BondedPeaksLangProvider extends LanguageProvider {
         this.add("screen.bonded_peaks.waiting", "The server has not replied. Check your connection.");
         this.add("screen.bonded_peaks.no_team", "Your journey starts here");
         this.add("screen.bonded_peaks.create_hint", "Create a team or accept an invitation.");
-        this.add("screen.bonded_peaks.no_invites", "No active invitations. Ask a team leader to invite you.");
+        this.add("screen.bonded_peaks.no_invites", "No active invitations. Ask a team owner to invite you.");
         this.add("screen.bonded_peaks.invited_by", "From %s");
         this.add("screen.bonded_peaks.expires", "Expires in %s seconds");
         this.add("screen.bonded_peaks.chat_hint", "Message your team...");
@@ -105,7 +105,7 @@ public class BondedPeaksLangProvider extends LanguageProvider {
         this.add("screen.bonded_peaks.send", "Send");
         this.add("screen.bonded_peaks.name_hint", "Team name");
         this.add("screen.bonded_peaks.player_hint", "Player name");
-        this.add("screen.bonded_peaks.create_description", "Choose up to 12 letters or digits for your team name.");
+        this.add("screen.bonded_peaks.create_description", "Enter up to 12 letters or digits for your team name.");
         this.add("screen.bonded_peaks.invite_description", "Select an online player or enter a known player's name.");
         this.add("screen.bonded_peaks.transfer_description", "Transfer leadership of %1$s to %2$s? You will become a member.");
         this.add("screen.bonded_peaks.kick_description", "Remove %2$s from %1$s? A new invitation will be required to rejoin.");

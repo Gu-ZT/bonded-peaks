@@ -89,7 +89,7 @@
   "screen.bonded_peaks.player_hint": "玩家名称",
   "screen.bonded_peaks.create_description": "队名最多十二字，仅可使用文字与数字。",
   "screen.bonded_peaks.invite_description": "选择在线玩家，或输入服务器已识别的玩家名称。",
-  "screen.bonded_peaks.transfer_description": "确认将「%1$s」的队长转让给 %2$s？转让后你将成为普通成员。",
+  "screen.bonded_peaks.transfer_description": "确认将「%1$s」的队长转让给 %2$s？转让后你将成为成员。",
   "screen.bonded_peaks.kick_description": "确认将 %2$s 移出「%1$s」？对方重新加入时需要再次获得邀请。",
   "screen.bonded_peaks.leave_description": "确认退出「%1$s」？重新加入时需要再次获得邀请。",
   "screen.bonded_peaks.disband_description": "确认解散「%1$s」？所有成员将离队，待处理的邀请也将失效。"
