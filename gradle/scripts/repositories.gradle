@@ -1,5 +1,11 @@
 repositories {
     mavenLocal()
+    maven {
+        url = 'https://server.cjsah.net:1002/maven/'
+        content {
+            includeModule('dev.dubhe.map', 'aleeve_atlas-neoforge-1.21.11')
+        }
+    }
     mavenCentral()
     maven {
         // location of the maven that hosts JEI files since January 2023
