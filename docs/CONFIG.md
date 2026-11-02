@@ -1,6 +1,6 @@
 # 队伍界面
 
-本分支使用 Minecraft 1.21.11、NeoForge 21.11.48 与 Java 21 构建。模组声明的 NeoForge 最低版本为 21.11.45。
+本分支使用 Minecraft 1.21.4、NeoForge 21.4.157 与 Java 21 构建。模组声明的 NeoForge 最低版本为 21.4.157。
 
 默认按 `G` 打开界面，也可使用客户端命令 `/bpui`。按键可以在游戏控制设置中的山河同契分类修改。
 
@@ -28,6 +28,9 @@ Atlas 的队友位置、地图增量同步、共享路径点、队伍标点和�
 
 # 构建联动适配器
 
-编译期从 `https://server.cjsah.net:1002/maven/` 解析 `dev.dubhe.map:aleeve_atlas-neoforge-1.21.11:0.0.1+build.+`，运行时仍为可选联动。执行 `./gradlew.bat build --console=plain` 即可构建，持续集成也使用该 Maven 依赖。
+编译期从 `https://server.cjsah.net:1002/maven/` 解析 `dev.dubhe.map:aleeve_atlas-neoforge-1.21.4:0.0.1+build.+`，运行时仍为可选联动。执行 `./gradlew.bat build --console=plain` 即可构建，持续集成也使用该 Maven 依赖。
 
-开发构建使用 NeoForge 21.11.48。验证最低兼容版本时执行 `./gradlew.bat compileJava test runData '-PneoForgeVersion=21.11.45' --console=plain`。
+开发构建使用 NeoForge 21.4.157。验证最低兼容版本时执行 `./gradlew.bat compileJava test runData '-PneoForgeVersion=21.4.157' --console=plain`。
+
+
+本分支 `dev/1.21.4` 对应 Aleeve Atlas `dev/1.21.4`。需要以 Atlas 最新源码验证时，使用 `-PaleeveAtlasDir=<源码绝对路径>`，默认构建仍解析可选 Maven API 依赖。

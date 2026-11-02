@@ -12,7 +12,6 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -21,9 +20,9 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
-import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.lwjgl.glfw.GLFW;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +30,7 @@ import java.util.List;
 /** 注册客户端界面入口，并将服务端反馈交给当前队伍界面。 */
 @EventBusSubscriber(modid = BondedPeaks.MOD_ID, value = Dist.CLIENT)
 public final class TeamClient {
-    private static final KeyMapping.Category CATEGORY = new KeyMapping.Category(
-        Identifier.fromNamespaceAndPath(BondedPeaks.MOD_ID, "team"));
+    private static final String CATEGORY = "key.category.bonded_peaks.team";
     private static final KeyMapping OPEN = new KeyMapping("key.bonded_peaks.open", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, CATEGORY);
     private static final List<Component> MESSAGES = new ArrayList<>();
     private static String chatTeam = "";
@@ -42,14 +40,14 @@ public final class TeamClient {
 
     @SubscribeEvent
     public static void registerKeys(RegisterKeyMappingsEvent event) {
-        event.registerCategory(CATEGORY);
         event.register(OPEN);
     }
 
-    @SubscribeEvent
-    public static void registerPayloads(RegisterClientPayloadHandlersEvent event) {
-        event.register(TeamRoster.TYPE, (roster, context) -> ClientTeamRoster.update(roster));
-        event.register(TeamSnapshot.TYPE, (snapshot, context) -> {
+    public static void receive(TeamRoster roster, IPayloadContext context) {
+        ClientTeamRoster.update(roster);
+    }
+
+    public static void receive(TeamSnapshot snapshot, IPayloadContext context) {
             if (!chatTeam.equals(snapshot.name())) {
                 MESSAGES.clear();
                 chatTeam = snapshot.name();
@@ -59,21 +57,21 @@ public final class TeamClient {
             } else if (Minecraft.getInstance().screen instanceof TeamFormScreen form) {
                 form.parent.receive(snapshot);
             }
-        });
-        event.register(TeamReply.TYPE, (reply, context) -> {
+    }
+
+    public static void receive(TeamReply reply, IPayloadContext context) {
             if (Minecraft.getInstance().screen instanceof TeamScreen screen) {
                 screen.reply(reply);
             } else if (Minecraft.getInstance().screen instanceof TeamFormScreen form) {
                 form.reply(reply);
             }
-        });
     }
 
     @SubscribeEvent
     public static void registerCommands(RegisterClientCommandsEvent event) {
         event.getDispatcher().register(LiteralArgumentBuilder.<net.minecraft.commands.CommandSourceStack>literal("bpui")
             .executes(context -> {
-                Minecraft.getInstance().schedule(TeamClient::open);
+                Minecraft.getInstance().execute(TeamClient::open);
                 return 1;
             }));
     }
@@ -141,7 +139,7 @@ public final class TeamClient {
 
     static void refresh() {
         if (supported()) {
-            ClientPacketDistributor.sendToServer(new TeamPackets.Request());
+            PacketDistributor.sendToServer(new TeamPackets.Request());
         }
     }
 }

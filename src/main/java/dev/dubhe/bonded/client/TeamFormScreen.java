@@ -7,7 +7,6 @@ import dev.dubhe.bonded.team.TeamManager;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringUtil;
 import org.jspecify.annotations.Nullable;
@@ -163,8 +162,8 @@ final class TeamFormScreen extends Screen {
         }
         String query = this.input.getValue().toLowerCase(Locale.ROOT);
         return connection.getOnlinePlayers().stream()
-            .filter(info -> this.parent.snapshot().members().stream().noneMatch(member -> member.id().equals(info.getProfile().id())))
-            .map(info -> info.getProfile().name())
+            .filter(info -> this.parent.snapshot().members().stream().noneMatch(member -> member.id().equals(info.getProfile().getId())))
+            .map(info -> info.getProfile().getName())
             .filter(name -> name.toLowerCase(Locale.ROOT).contains(query))
             .sorted(String.CASE_INSENSITIVE_ORDER).toList();
     }
@@ -196,11 +195,11 @@ final class TeamFormScreen extends Screen {
 
     @Override
     public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        graphics.fill(0, 0, this.width, this.height, 0xC0081018);
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        graphics.fill(0, 0, this.width, this.height, 0xC0081018);
         graphics.fill(this.left - 1, this.top - 1, this.left + this.formWidth + 1, this.top + this.formHeight + 1, 0xFF53656C);
         graphics.fill(this.left, this.top, this.left + this.formWidth, this.top + this.formHeight, 0xFF18252F);
         graphics.fill(this.left, this.top, this.left + this.formWidth, this.top + 2, 0xFF89C9B5);
@@ -230,12 +229,12 @@ final class TeamFormScreen extends Screen {
     }
 
     @Override
-    public boolean keyPressed(KeyEvent event) {
-        if (this.input != null && this.input.isFocused() && (event.key() == GLFW.GLFW_KEY_ENTER || event.key() == GLFW.GLFW_KEY_KP_ENTER)) {
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (this.input != null && this.input.isFocused() && (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER)) {
             this.submit();
             return true;
         }
-        return super.keyPressed(event);
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override

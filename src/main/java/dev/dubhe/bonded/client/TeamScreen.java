@@ -6,10 +6,9 @@ import dev.dubhe.bonded.network.TeamSnapshot;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
-import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
@@ -263,7 +262,7 @@ final class TeamScreen extends Screen {
         this.actionTicks = 0;
         TeamSnapshot.Invite invitation = this.selectedInvitation();
         String expectedTeam = kind == TeamAction.Kind.ACCEPT && invitation != null ? invitation.team() : this.snapshot.name();
-        ClientPacketDistributor.sendToServer(new TeamAction(request, kind, expectedTeam, argument));
+        PacketDistributor.sendToServer(new TeamAction(request, kind, expectedTeam, argument));
         this.status = text("pending");
         this.refreshTicks = 19;
         this.updateActions();
@@ -330,11 +329,11 @@ final class TeamScreen extends Screen {
 
     @Override
     public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        graphics.fill(0, 0, this.width, this.height, 0xB0081018);
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        graphics.fill(0, 0, this.width, this.height, 0xB0081018);
         graphics.fill(this.left - 1, this.top - 1, this.right() + 1, this.bottom() + 1, 0xFF53656C);
         graphics.fill(this.left, this.top, this.right(), this.bottom(), 0xF018252F);
         graphics.fill(this.left, this.top, this.right(), this.top + 46, 0xFF243843);
@@ -456,13 +455,13 @@ final class TeamScreen extends Screen {
     }
 
     @Override
-    public boolean keyPressed(KeyEvent event) {
-        if ((event.key() == GLFW.GLFW_KEY_ENTER || event.key() == GLFW.GLFW_KEY_KP_ENTER)
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if ((keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER)
             && this.chat != null && this.chat.isFocused()) {
             this.sendChat();
             return true;
         }
-        return super.keyPressed(event);
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     private int right() {

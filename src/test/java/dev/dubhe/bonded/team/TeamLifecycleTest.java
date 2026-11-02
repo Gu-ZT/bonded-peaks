@@ -2,7 +2,7 @@ package dev.dubhe.bonded.team;
 
 import dev.dubhe.bonded.network.TeamRoster;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.players.NameAndId;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
@@ -35,9 +35,9 @@ class TeamLifecycleTest {
     private MinecraftServer server;
     private TeamManager teams;
     private PlayerList players;
-    private final NameAndId owner = new NameAndId(UUID.randomUUID(), "foo");
-    private final NameAndId member = new NameAndId(UUID.randomUUID(), "bar");
-    private final NameAndId invited = new NameAndId(UUID.randomUUID(), "example");
+    private final GameProfile owner = new GameProfile(UUID.randomUUID(), "foo");
+    private final GameProfile member = new GameProfile(UUID.randomUUID(), "bar");
+    private final GameProfile invited = new GameProfile(UUID.randomUUID(), "example");
 
     @BeforeEach
     void setUp() {
@@ -59,7 +59,7 @@ class TeamLifecycleTest {
         ArgumentCaptor<ClientboundCustomPayloadPacket> packet = ArgumentCaptor.forClass(ClientboundCustomPayloadPacket.class);
         verify(receiver.connection).send(packet.capture());
         TeamRoster created = assertInstanceOf(TeamRoster.class, packet.getValue().payload());
-        assertEquals(TeamRoster.idFor("example"), created.teamOf(this.owner.id()));
+        assertEquals(TeamRoster.idFor("example"), created.teamOf(this.owner.getId()));
         clearInvocations(receiver.connection);
         this.teams.beginDisband(this.owner, System.currentTimeMillis());
         this.teams.confirmDisband(this.owner);
@@ -82,16 +82,16 @@ class TeamLifecycleTest {
         long now = System.currentTimeMillis();
         this.teams.createTeam(this.owner, "山河", now);
         this.teams.invite(this.owner, this.member, now);
-        this.teams.acceptInvite(this.member, this.owner.id(), now + 1);
-        assertEquals(this.roster().teamOf(this.owner.id()), this.roster().teamOf(this.member.id()));
-        assertThrows(TeamManager.TeamException.class, () -> this.teams.kick(this.member, this.owner.id()));
+        this.teams.acceptInvite(this.member, this.owner.getId(), now + 1);
+        assertEquals(this.roster().teamOf(this.owner.getId()), this.roster().teamOf(this.member.getId()));
+        assertThrows(TeamManager.TeamException.class, () -> this.teams.kick(this.member, this.owner.getId()));
         this.teams.leave(this.member);
-        assertNull(this.roster().teamOf(this.member.id()));
+        assertNull(this.roster().teamOf(this.member.getId()));
         this.teams.invite(this.owner, this.member, now + 2);
-        this.teams.acceptInvite(this.member, this.owner.id(), now + 3);
-        this.teams.kick(this.owner, this.member.id());
-        assertNull(this.roster().teamOf(this.member.id()));
-        assertEquals(TeamRoster.idFor("山河"), this.roster().teamOf(this.owner.id()));
+        this.teams.acceptInvite(this.member, this.owner.getId(), now + 3);
+        this.teams.kick(this.owner, this.member.getId());
+        assertNull(this.roster().teamOf(this.member.getId()));
+        assertEquals(TeamRoster.idFor("山河"), this.roster().teamOf(this.owner.getId()));
     }
 
     @Test
@@ -99,10 +99,10 @@ class TeamLifecycleTest {
         long now = System.currentTimeMillis();
         this.teams.createTeam(this.owner, "example", now);
         this.teams.invite(this.owner, this.member, now);
-        this.teams.acceptInvite(this.member, this.owner.id(), now + 1);
+        this.teams.acceptInvite(this.member, this.owner.getId(), now + 1);
         this.teams.invite(this.owner, this.invited, now + 2);
-        this.teams.transfer(this.owner, this.member.id());
-        assertTrue(this.teams.getInvitesFor(this.invited.id(), now + 3).isEmpty());
+        this.teams.transfer(this.owner, this.member.getId());
+        assertTrue(this.teams.getInvitesFor(this.invited.getId(), now + 3).isEmpty());
         assertThrows(TeamManager.TeamException.class, () -> this.teams.beginDisband(this.owner, now + 4));
         this.teams.beginDisband(this.member, now + 4);
         this.teams.confirmDisband(this.member);
@@ -114,13 +114,13 @@ class TeamLifecycleTest {
         long now = System.currentTimeMillis();
         this.teams.createTeam(this.owner, "example", now);
         this.teams.invite(this.owner, this.member, now);
-        this.teams.acceptInvite(this.member, this.owner.id(), now + 1);
+        this.teams.acceptInvite(this.member, this.owner.getId(), now + 1);
         this.teams.invite(this.owner, this.invited, now + 2);
         TeamManager.unload(this.server);
         this.teams = TeamManager.get(this.server);
-        assertEquals("bar", this.teams.resolvePlayerName(this.member.id()));
-        assertEquals(2, this.teams.getTeamFor(this.owner.id()).orElseThrow().getMemberCount());
+        assertEquals("bar", this.teams.resolvePlayerName(this.member.getId()));
+        assertEquals(2, this.teams.getTeamFor(this.owner.getId()).orElseThrow().getMemberCount());
         assertFalse(this.roster().membership().isEmpty());
-        assertTrue(this.teams.getInvitesFor(this.invited.id(), now + 3).isEmpty());
+        assertTrue(this.teams.getInvitesFor(this.invited.getId(), now + 3).isEmpty());
     }
 }

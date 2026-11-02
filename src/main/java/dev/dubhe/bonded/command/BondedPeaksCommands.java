@@ -13,7 +13,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.GameProfileArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.players.NameAndId;
+import com.mojang.authlib.GameProfile;
 import org.apache.commons.lang3.function.TriFunction;
 import org.jspecify.annotations.Nullable;
 
@@ -118,7 +118,7 @@ public final class BondedPeaksCommands {
         ServerPlayer player = context.getSource().getPlayerOrException();
         TeamManager manager = TeamManager.get(context.getSource().getServer());
         String teamName = StringArgumentType.getString(context, "name");
-        NameAndId owner = nameAndId(player);
+        GameProfile owner = nameAndId(player);
 
         try {
             Team team = manager.createTeam(owner, teamName, context.getSource().getServer().overworld().getGameTime());
@@ -136,21 +136,21 @@ public final class BondedPeaksCommands {
     private static int invitePlayer(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
         TeamManager manager = TeamManager.get(context.getSource().getServer());
-        NameAndId inviter = nameAndId(player);
+        GameProfile inviter = nameAndId(player);
 
         try {
-            NameAndId target = resolveSingleProfile(context, "player");
+            GameProfile target = resolveSingleProfile(context, "player");
             Team team = manager.invite(inviter, target, System.currentTimeMillis());
             BondedPeaksCommands.sendSuccess(
                 context.getSource(),
-                Component.translatable("commands.bonded_peaks.invite.sent", target.name())
+                Component.translatable("commands.bonded_peaks.invite.sent", target.getName())
             );
 
-            ServerPlayer targetPlayer = context.getSource().getServer().getPlayerList().getPlayer(target.id());
+            ServerPlayer targetPlayer = context.getSource().getServer().getPlayerList().getPlayer(target.getId());
             if (targetPlayer != null) {
                 targetPlayer.sendSystemMessage(Component.translatable(
                     "commands.bonded_peaks.invite.received",
-                    inviter.name(),
+                    inviter.getName(),
                     team.getName()
                 ));
             }
@@ -163,7 +163,7 @@ public final class BondedPeaksCommands {
 
     private static int acceptInviteByInviter(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         try {
-            return BondedPeaksCommands.acceptInvite(context, BondedPeaksCommands.resolveSingleProfile(context, "inviter").id());
+            return BondedPeaksCommands.acceptInvite(context, BondedPeaksCommands.resolveSingleProfile(context, "inviter").getId());
         } catch (TeamException exception) {
             BondedPeaksCommands.sendFailure(context.getSource(), exception);
             return 0;
@@ -173,13 +173,13 @@ public final class BondedPeaksCommands {
     private static int acceptInvite(CommandContext<CommandSourceStack> context, @Nullable UUID inviterId) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
         TeamManager manager = TeamManager.get(context.getSource().getServer());
-        NameAndId target = BondedPeaksCommands.nameAndId(player);
+        GameProfile target = BondedPeaksCommands.nameAndId(player);
 
         try {
             Team team = manager.acceptInvite(target, inviterId, System.currentTimeMillis());
             Component joinedMessage = Component.translatable("commands.bonded_peaks.accept.success", team.getName());
             player.sendSystemMessage(joinedMessage);
-            Component notice = Component.translatable("commands.bonded_peaks.member.joined", target.name(), team.getName());
+            Component notice = Component.translatable("commands.bonded_peaks.member.joined", target.getName(), team.getName());
             for (ServerPlayer member : manager.getOnlineMembers(team)) {
                 if (!member.getUUID().equals(player.getUUID())) {
                     member.sendSystemMessage(notice);
@@ -195,7 +195,7 @@ public final class BondedPeaksCommands {
     private static int leaveTeam(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
         TeamManager manager = TeamManager.get(context.getSource().getServer());
-        NameAndId member = BondedPeaksCommands.nameAndId(player);
+        GameProfile member = BondedPeaksCommands.nameAndId(player);
 
         try {
             Team team = manager.leave(member);
@@ -203,7 +203,7 @@ public final class BondedPeaksCommands {
                 context.getSource(),
                 Component.translatable("commands.bonded_peaks.leave.success", team.getName())
             );
-            Component notice = Component.translatable("commands.bonded_peaks.member.left", member.name(), team.getName());
+            Component notice = Component.translatable("commands.bonded_peaks.member.left", member.getName(), team.getName());
             for (ServerPlayer onlineMember : manager.getOnlineMembers(team)) {
                 onlineMember.sendSystemMessage(notice);
             }
@@ -254,17 +254,17 @@ public final class BondedPeaksCommands {
         TeamManager manager = TeamManager.get(context.getSource().getServer());
 
         try {
-            NameAndId target = BondedPeaksCommands.resolveSingleProfile(context, "player");
-            Team team = manager.kick(nameAndId(player), target.id());
+            GameProfile target = BondedPeaksCommands.resolveSingleProfile(context, "player");
+            Team team = manager.kick(nameAndId(player), target.getId());
             BondedPeaksCommands.sendSuccess(
                 context.getSource(),
-                Component.translatable("commands.bonded_peaks.kick.success", target.name(), team.getName())
+                Component.translatable("commands.bonded_peaks.kick.success", target.getName(), team.getName())
             );
-            ServerPlayer targetPlayer = context.getSource().getServer().getPlayerList().getPlayer(target.id());
+            ServerPlayer targetPlayer = context.getSource().getServer().getPlayerList().getPlayer(target.getId());
             if (targetPlayer != null) {
                 targetPlayer.sendSystemMessage(Component.translatable("commands.bonded_peaks.kick.received", team.getName()));
             }
-            Component notice = Component.translatable("commands.bonded_peaks.member.kicked", target.name(), team.getName());
+            Component notice = Component.translatable("commands.bonded_peaks.member.kicked", target.getName(), team.getName());
             for (ServerPlayer onlineMember : manager.getOnlineMembers(team)) {
                 if (!onlineMember.getUUID().equals(player.getUUID())) {
                     onlineMember.sendSystemMessage(notice);
@@ -282,16 +282,16 @@ public final class BondedPeaksCommands {
         TeamManager manager = TeamManager.get(context.getSource().getServer());
 
         try {
-            NameAndId target = BondedPeaksCommands.resolveSingleProfile(context, "player");
-            Team team = manager.transfer(BondedPeaksCommands.nameAndId(player), target.id());
-            Component notice = Component.translatable("commands.bonded_peaks.transfer.success", target.name(), team.getName());
+            GameProfile target = BondedPeaksCommands.resolveSingleProfile(context, "player");
+            Team team = manager.transfer(BondedPeaksCommands.nameAndId(player), target.getId());
+            Component notice = Component.translatable("commands.bonded_peaks.transfer.success", target.getName(), team.getName());
             BondedPeaksCommands.sendSuccess(context.getSource(), notice);
-            ServerPlayer targetPlayer = context.getSource().getServer().getPlayerList().getPlayer(target.id());
+            ServerPlayer targetPlayer = context.getSource().getServer().getPlayerList().getPlayer(target.getId());
             if (targetPlayer != null && !targetPlayer.getUUID().equals(player.getUUID())) {
                 targetPlayer.sendSystemMessage(notice);
             }
             for (ServerPlayer onlineMember : manager.getOnlineMembers(team)) {
-                if (!onlineMember.getUUID().equals(player.getUUID()) && !onlineMember.getUUID().equals(target.id())) {
+                if (!onlineMember.getUUID().equals(player.getUUID()) && !onlineMember.getUUID().equals(target.getId())) {
                     onlineMember.sendSystemMessage(notice);
                 }
             }
@@ -394,9 +394,9 @@ public final class BondedPeaksCommands {
         );
     }
 
-    private static NameAndId resolveSingleProfile(CommandContext<CommandSourceStack> context, String argumentName) throws TeamException {
+    private static GameProfile resolveSingleProfile(CommandContext<CommandSourceStack> context, String argumentName) throws TeamException {
         try {
-            Collection<NameAndId> profiles = GameProfileArgument.getGameProfiles(context, argumentName);
+            Collection<GameProfile> profiles = GameProfileArgument.getGameProfiles(context, argumentName);
             return TeamManager.singleProfile(profiles);
         } catch (TeamException exception) {
             log.error(exception.getLocalizedMessage(), exception);
@@ -406,8 +406,8 @@ public final class BondedPeaksCommands {
         }
     }
 
-    private static NameAndId nameAndId(ServerPlayer player) {
-        return new NameAndId(player.getUUID(), player.getGameProfile().name());
+    private static GameProfile nameAndId(ServerPlayer player) {
+        return new GameProfile(player.getUUID(), player.getGameProfile().getName());
     }
 
     private static void sendSuccess(CommandSourceStack source, Component component) {

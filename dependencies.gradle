@@ -3,6 +3,7 @@ dependencies {
     jarJar(libs.bundles.anvillib)
 
     compileOnly libs.jsr305
+    compileOnly libs.jspecify
     compileOnly(libs.aleeve.atlas) { transitive = false }
     testImplementation(libs.aleeve.atlas) { transitive = false }
 

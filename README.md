@@ -10,7 +10,7 @@
 
 </div>
 
-**山河同契**（Bonded Peaks）是一个基于 **NeoForge 21.11 / Minecraft 1.21.11** 的轻量队伍模组。玩家可以创建队伍、邀请好友入队、使用队伍专属聊天，并由队长统一管理成员。所有数据随世界存档持久化保存，服务器重启不丢失。
+**山河同契**（Bonded Peaks）是一个基于 **NeoForge 21.11 / Minecraft 1.21.4** 的轻量队伍模组。玩家可以创建队伍、邀请好友入队、使用队伍专属聊天，并由队长统一管理成员。所有数据随世界存档持久化保存，服务器重启不丢失。
 
 当前版本：`0.0.1`（早期开发版）
 
@@ -29,14 +29,14 @@
 
 | 项目 | 要求 |
 |---|---|
-| Minecraft | 1.21.11（声明兼容范围 `[1.21.11, 1.21.12)`） |
-| NeoForge | 最低 21.11.45，构建使用 21.11.48（声明兼容范围 `[21.11.45,)`） |
+| Minecraft | 1.21.4（声明兼容范围 `[1.21.4, 1.21.12)`） |
+| NeoForge | 最低 21.4.157，构建使用 21.4.157（声明兼容范围 `[21.4.157,)`） |
 | Java | 构建需要 JDK 21 |
 | 前置依赖 | AnvilLib（network、config、rendering、integration 模块），已通过 JarJar 内嵌，无需单独安装 |
 
 ## 安装方法
 
-1. 下载 `bonded-peaks-1.21.11-<版本>.jar`（主 jar 即可，依赖已内嵌）
+1. 下载 `bonded-peaks-1.21.4-<版本>.jar`（主 jar 即可，依赖已内嵌）
 2. 放入客户端的 `.minecraft/mods/` 目录，或服务器的 `mods/` 目录
 3. 启动游戏，在聊天框输入 `/bondedpeaks` 查看帮助
 
@@ -151,8 +151,8 @@ cd bonded-peaks
 
 构建产物位于 `build/libs/`：
 
-- `bonded-peaks-1.21.11-<版本>.jar` — 主 jar
-- `bonded-peaks-1.21.11-<版本>-sources.jar` — 源码 jar
+- `bonded-peaks-1.21.4-<版本>.jar` — 主 jar
+- `bonded-peaks-1.21.4-<版本>-sources.jar` — 源码 jar
 
 开发常用命令：
 
@@ -191,3 +191,6 @@ A：不能。所有命令都要求由游戏内玩家执行。
 
 - 代码：`GNU LGPL 3.0`（见 [`LICENSE`](./LICENSE)）
 - 资源：默认保留所有权利，除非另有声明（见 [`ASSETS_LICENSE`](./ASSETS_LICENSE)）
+
+
+本分支 `dev/1.21.4` 对应 Aleeve Atlas `dev/1.21.4`。需要以 Atlas 最新源码验证时，使用 `-PaleeveAtlasDir=<源码绝对路径>`，默认构建仍解析可选 Maven API 依赖。

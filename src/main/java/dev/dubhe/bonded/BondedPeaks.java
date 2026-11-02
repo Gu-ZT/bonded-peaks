@@ -28,7 +28,7 @@ public class BondedPeaks {
         integrations.compileContent();
         modEventBus.addListener((FMLCommonSetupEvent event) -> event.enqueueWork(() -> {
             integrations.loadAllIntegrations();
-            if (FMLEnvironment.getDist().isClient()) {
+            if (FMLEnvironment.dist.isClient()) {
                 integrations.loadAllClientIntegrations();
             }
         }));

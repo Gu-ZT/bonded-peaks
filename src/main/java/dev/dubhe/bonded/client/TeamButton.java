@@ -29,7 +29,7 @@ final class TeamButton extends Button {
     }
 
     @Override
-    protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         int border = this.isHoveredOrFocused() ? 0xFFB2D7D5 : 0xFF354A55;
         int fill = this.selected ? 0xFF305954 : this.danger ? 0xFF512F39 : 0xFF22333F;
         if (!this.active) {
