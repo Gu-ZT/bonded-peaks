@@ -4,7 +4,7 @@ import dev.dubhe.bonded.BondedPeaks;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import java.util.UUID;
 /** 公开队伍成员表用于地图队友判定，不包含邀请或聊天内容。 */
 public final class TeamRoster implements CustomPacketPayload {
     public static final TeamRoster EMPTY = new TeamRoster(List.of());
-    public static final Type<TeamRoster> TYPE = new Type<>(Identifier.fromNamespaceAndPath(BondedPeaks.MOD_ID, "team_roster"));
+    public static final Type<TeamRoster> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(BondedPeaks.MOD_ID, "team_roster"));
     public static final StreamCodec<FriendlyByteBuf, TeamRoster> CODEC = StreamCodec.of((buffer, roster) -> {
         buffer.writeCollection(roster.entries, (output, team) -> {
             output.writeUtf(team.name);

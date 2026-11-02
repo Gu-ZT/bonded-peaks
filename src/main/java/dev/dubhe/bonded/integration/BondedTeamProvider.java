@@ -33,7 +33,7 @@ final class BondedTeamProvider implements TeamProvider {
         if (server != null) {
             return TeamManager.get(server).getTeamFor(playerId).map(team -> TeamRoster.idFor(team.getName())).orElse(null);
         }
-        return FMLEnvironment.getDist() == Dist.CLIENT ? ClientAccess.roster().teamOf(playerId) : null;
+        return FMLEnvironment.dist == Dist.CLIENT ? ClientAccess.roster().teamOf(playerId) : null;
     }
 
     @Override
@@ -43,7 +43,7 @@ final class BondedTeamProvider implements TeamProvider {
             return TeamManager.get(server).listTeams().stream().filter(team -> TeamRoster.idFor(team.getName()).equals(teamId))
                 .flatMap(team -> TeamManager.get(server).getOnlineMembers(team).stream()).map(player -> player.getUUID()).toList();
         }
-        return FMLEnvironment.getDist() == Dist.CLIENT ? ClientAccess.onlineMembers(teamId) : List.of();
+        return FMLEnvironment.dist == Dist.CLIENT ? ClientAccess.onlineMembers(teamId) : List.of();
     }
 
     @Override
@@ -60,7 +60,7 @@ final class BondedTeamProvider implements TeamProvider {
             name = TeamManager.get(server).listTeams().stream().filter(team -> TeamRoster.idFor(team.getName()).equals(teamId))
                 .map(team -> team.getName()).findFirst().orElse("");
         } else {
-            TeamRoster.Entry team = FMLEnvironment.getDist() == Dist.CLIENT ? ClientAccess.roster().team(teamId) : null;
+            TeamRoster.Entry team = FMLEnvironment.dist == Dist.CLIENT ? ClientAccess.roster().team(teamId) : null;
             name = team == null ? "" : team.name();
         }
         return Component.translatable("screen.bonded_peaks.team_name", name);

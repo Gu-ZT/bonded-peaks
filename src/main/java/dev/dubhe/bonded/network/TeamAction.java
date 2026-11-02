@@ -4,7 +4,7 @@ import dev.dubhe.bonded.BondedPeaks;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringUtil;
 
 import java.util.Locale;
@@ -12,7 +12,7 @@ import java.util.UUID;
 
 /** 界面操作仅允许已列出的队伍命令，并携带操作时的队名以校验过期界面。 */
 public record TeamAction(UUID requestId, Kind kind, String team, String argument) implements CustomPacketPayload {
-    public static final Type<TeamAction> TYPE = new Type<>(Identifier.fromNamespaceAndPath(BondedPeaks.MOD_ID, "team_action"));
+    public static final Type<TeamAction> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(BondedPeaks.MOD_ID, "team_action"));
     public static final StreamCodec<FriendlyByteBuf, TeamAction> CODEC = StreamCodec.of((buffer, action) -> {
         buffer.writeUUID(action.requestId);
         buffer.writeEnum(action.kind);
@@ -27,7 +27,7 @@ public record TeamAction(UUID requestId, Kind kind, String team, String argument
 
     /** 使用普通聊天命令的字符规则，玩家操作必须携带唯一身份。 */
     public boolean validArgument() {
-        if (this.argument.length() > 239 || !this.argument.chars().allMatch(StringUtil::isAllowedChatCharacter)) {
+        if (this.argument.length() > 239 || !this.argument.chars().allMatch(value -> StringUtil.isAllowedChatCharacter((char) value))) {
             return false;
         }
         return switch (this.kind) {

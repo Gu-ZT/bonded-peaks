@@ -39,7 +39,7 @@ import lombok.experimental.Accessors;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.players.NameAndId;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.world.level.storage.LevelResource;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -88,7 +88,7 @@ public class TeamManager {
     }
 
     public void onPlayerLogin(ServerPlayer player) {
-        this.rememberPlayer(new NameAndId(player.getUUID(), player.getGameProfile().name()));
+        this.rememberPlayer(new GameProfile(player.getUUID(), player.getGameProfile().getName()));
         this.purgeExpiredInvites(System.currentTimeMillis());
         List<TeamInvite> invites = this.invitesByTarget.getOrDefault(player.getUUID(), List.of());
         for (TeamInvite invite : invites) {
@@ -108,53 +108,53 @@ public class TeamManager {
         this.pendingDisbands.remove(player.getUUID());
     }
 
-    public Team createTeam(NameAndId owner, String name, long now) throws TeamException {
+    public Team createTeam(GameProfile owner, String name, long now) throws TeamException {
         this.rememberPlayer(owner);
-        this.validateCanJoinNewTeam(owner.id());
+        this.validateCanJoinNewTeam(owner.getId());
         validateTeamName(name);
         String teamKey = normalizeTeamName(name);
         if (this.teamsByName.containsKey(teamKey)) {
             throw new TeamException("commands.bonded_peaks.create.duplicate", name);
         }
 
-        Team team = Team.create(name, owner.id(), now);
+        Team team = Team.create(name, owner.getId(), now);
         this.teamsByName.put(teamKey, team);
-        this.teamByMember.put(owner.id(), teamKey);
-        this.clearIncomingInvites(owner.id());
-        this.pendingDisbands.remove(owner.id());
+        this.teamByMember.put(owner.getId(), teamKey);
+        this.clearIncomingInvites(owner.getId());
+        this.pendingDisbands.remove(owner.getId());
         this.changed();
         return team;
     }
 
-    public Team invite(NameAndId inviter, NameAndId target, long now) throws TeamException {
+    public Team invite(GameProfile inviter, GameProfile target, long now) throws TeamException {
         this.rememberPlayer(inviter);
         this.rememberPlayer(target);
         this.purgeExpiredInvites(now);
 
-        if (inviter.id().equals(target.id())) {
+        if (inviter.getId().equals(target.getId())) {
             throw new TeamException("commands.bonded_peaks.invite.self");
         }
 
-        Team team = this.getRequiredTeamFor(inviter.id());
-        if (!team.isOwner(inviter.id())) {
+        Team team = this.getRequiredTeamFor(inviter.getId());
+        if (!team.isOwner(inviter.getId())) {
             throw new TeamException("commands.bonded_peaks.owner_only");
         }
-        if (this.teamByMember.containsKey(target.id())) {
-            throw new TeamException("commands.bonded_peaks.team.already_in_team.target", target.name());
+        if (this.teamByMember.containsKey(target.getId())) {
+            throw new TeamException("commands.bonded_peaks.team.already_in_team.target", target.getName());
         }
 
-        List<TeamInvite> invites = this.invitesByTarget.computeIfAbsent(target.id(), ignored -> new ArrayList<>());
-        invites.removeIf(invite -> invite.inviterId().equals(inviter.id()) || normalizeTeamName(invite.teamName()).equals(normalizeTeamName(team.getName())));
-        invites.add(new TeamInvite(inviter.id(), inviter.name(), team.getName(), target.id(), now));
+        List<TeamInvite> invites = this.invitesByTarget.computeIfAbsent(target.getId(), ignored -> new ArrayList<>());
+        invites.removeIf(invite -> invite.inviterId().equals(inviter.getId()) || normalizeTeamName(invite.teamName()).equals(normalizeTeamName(team.getName())));
+        invites.add(new TeamInvite(inviter.getId(), inviter.getName(), team.getName(), target.getId(), now));
         return team;
     }
 
-    public Team acceptInvite(NameAndId target, @Nullable UUID inviterId, long now) throws TeamException {
+    public Team acceptInvite(GameProfile target, @Nullable UUID inviterId, long now) throws TeamException {
         this.rememberPlayer(target);
-        this.validateCanJoinNewTeam(target.id());
+        this.validateCanJoinNewTeam(target.getId());
         this.purgeExpiredInvites(now);
 
-        List<TeamInvite> invites = this.invitesByTarget.getOrDefault(target.id(), List.of());
+        List<TeamInvite> invites = this.invitesByTarget.getOrDefault(target.getId(), List.of());
         if (invites.isEmpty()) {
             throw new TeamException("commands.bonded_peaks.accept.none");
         }
@@ -168,66 +168,66 @@ public class TeamManager {
 
         Team team = this.getTeamByName(selected.teamName()).orElse(null);
         if (team == null || !team.isOwner(selected.inviterId())) {
-            this.removeInvite(target.id(), selected);
+            this.removeInvite(target.getId(), selected);
             throw new TeamException("commands.bonded_peaks.accept.invalidated");
         }
 
-        team.addMember(target.id());
-        this.teamByMember.put(target.id(), normalizeTeamName(team.getName()));
-        this.clearIncomingInvites(target.id());
-        this.pendingDisbands.remove(target.id());
+        team.addMember(target.getId());
+        this.teamByMember.put(target.getId(), normalizeTeamName(team.getName()));
+        this.clearIncomingInvites(target.getId());
+        this.pendingDisbands.remove(target.getId());
         this.changed();
         return team;
     }
 
-    public Team leave(NameAndId player) throws TeamException {
+    public Team leave(GameProfile player) throws TeamException {
         this.rememberPlayer(player);
-        Team team = this.getRequiredTeamFor(player.id());
-        if (team.isOwner(player.id())) {
+        Team team = this.getRequiredTeamFor(player.getId());
+        if (team.isOwner(player.getId())) {
             throw new TeamException("commands.bonded_peaks.leave.owner_forbidden");
         }
 
-        team.removeMember(player.id());
-        this.teamByMember.remove(player.id());
-        this.pendingDisbands.remove(player.id());
+        team.removeMember(player.getId());
+        this.teamByMember.remove(player.getId());
+        this.pendingDisbands.remove(player.getId());
         this.changed();
         return team;
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public Team beginDisband(NameAndId player, long now) throws TeamException {
+    public Team beginDisband(GameProfile player, long now) throws TeamException {
         this.rememberPlayer(player);
-        Team team = this.getRequiredTeamFor(player.id());
-        if (!team.isOwner(player.id())) {
+        Team team = this.getRequiredTeamFor(player.getId());
+        if (!team.isOwner(player.getId())) {
             throw new TeamException("commands.bonded_peaks.owner_only");
         }
 
-        this.pendingDisbands.put(player.id(), now);
+        this.pendingDisbands.put(player.getId(), now);
         return team;
     }
 
-    public Team confirmDisband(NameAndId player) throws TeamException {
+    public Team confirmDisband(GameProfile player) throws TeamException {
         this.rememberPlayer(player);
-        Team team = this.getRequiredTeamFor(player.id());
-        if (!team.isOwner(player.id())) {
+        Team team = this.getRequiredTeamFor(player.getId());
+        if (!team.isOwner(player.getId())) {
             throw new TeamException("commands.bonded_peaks.owner_only");
         }
-        if (!this.pendingDisbands.containsKey(player.id())) {
+        if (!this.pendingDisbands.containsKey(player.getId())) {
             throw new TeamException("commands.bonded_peaks.confirm.none");
         }
 
-        this.pendingDisbands.remove(player.id());
+        this.pendingDisbands.remove(player.getId());
         this.disband(team);
         return team;
     }
 
-    public Team kick(NameAndId owner, UUID targetId) throws TeamException {
+    public Team kick(GameProfile owner, UUID targetId) throws TeamException {
         this.rememberPlayer(owner);
-        Team team = this.getRequiredTeamFor(owner.id());
-        if (!team.isOwner(owner.id())) {
+        Team team = this.getRequiredTeamFor(owner.getId());
+        if (!team.isOwner(owner.getId())) {
             throw new TeamException("commands.bonded_peaks.owner_only");
         }
-        if (owner.id().equals(targetId)) {
+        if (owner.getId().equals(targetId)) {
             throw new TeamException("commands.bonded_peaks.kick.self");
         }
         if (!team.hasMember(targetId)) {
@@ -241,13 +241,13 @@ public class TeamManager {
         return team;
     }
 
-    public Team transfer(NameAndId owner, UUID targetId) throws TeamException {
+    public Team transfer(GameProfile owner, UUID targetId) throws TeamException {
         this.rememberPlayer(owner);
-        Team team = this.getRequiredTeamFor(owner.id());
-        if (!team.isOwner(owner.id())) {
+        Team team = this.getRequiredTeamFor(owner.getId());
+        if (!team.isOwner(owner.getId())) {
             throw new TeamException("commands.bonded_peaks.owner_only");
         }
-        if (owner.id().equals(targetId)) {
+        if (owner.getId().equals(targetId)) {
             throw new TeamException("commands.bonded_peaks.transfer.self");
         }
         if (!team.hasMember(targetId)) {
@@ -255,7 +255,7 @@ public class TeamManager {
         }
 
         team.transferOwnership(targetId);
-        this.pendingDisbands.remove(owner.id());
+        this.pendingDisbands.remove(owner.getId());
         this.pendingDisbands.remove(targetId);
         this.removeInvitesForTeam(team.getName());
         this.changed();
@@ -300,7 +300,7 @@ public class TeamManager {
     public String resolvePlayerName(UUID playerId) {
         ServerPlayer player = this.server.getPlayerList().getPlayer(playerId);
         if (player != null) {
-            return player.getGameProfile().name();
+            return player.getGameProfile().getName();
         }
         return this.knownPlayerNames.getOrDefault(playerId, playerId.toString());
     }
@@ -380,8 +380,8 @@ public class TeamManager {
         });
     }
 
-    private void rememberPlayer(NameAndId player) {
-        this.knownPlayerNames.put(player.id(), player.name());
+    private void rememberPlayer(GameProfile player) {
+        this.knownPlayerNames.put(player.getId(), player.getName());
     }
 
     private void load() {
@@ -521,7 +521,7 @@ public class TeamManager {
         return name.toLowerCase(Locale.ROOT);
     }
 
-    public static NameAndId singleProfile(Collection<NameAndId> profiles) throws TeamException {
+    public static GameProfile singleProfile(Collection<GameProfile> profiles) throws TeamException {
         Objects.requireNonNull(profiles, "profiles");
         if (profiles.isEmpty()) {
             throw new TeamException("commands.bonded_peaks.player.not_found");

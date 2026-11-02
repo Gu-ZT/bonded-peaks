@@ -12,7 +12,6 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -31,8 +30,7 @@ import java.util.List;
 /** 注册客户端界面入口，并将服务端反馈交给当前队伍界面。 */
 @EventBusSubscriber(modid = BondedPeaks.MOD_ID, value = Dist.CLIENT)
 public final class TeamClient {
-    private static final KeyMapping.Category CATEGORY = new KeyMapping.Category(
-        Identifier.fromNamespaceAndPath(BondedPeaks.MOD_ID, "team"));
+    private static final String CATEGORY = "key.category.bonded_peaks.team";
     private static final KeyMapping OPEN = new KeyMapping("key.bonded_peaks.open", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, CATEGORY);
     private static final List<Component> MESSAGES = new ArrayList<>();
     private static String chatTeam = "";
@@ -42,7 +40,6 @@ public final class TeamClient {
 
     @SubscribeEvent
     public static void registerKeys(RegisterKeyMappingsEvent event) {
-        event.registerCategory(CATEGORY);
         event.register(OPEN);
     }
 
