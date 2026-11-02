@@ -71,7 +71,8 @@ public final class TeamClient {
     public static void registerCommands(RegisterClientCommandsEvent event) {
         event.getDispatcher().register(LiteralArgumentBuilder.<net.minecraft.commands.CommandSourceStack>literal("bpui")
             .executes(context -> {
-                Minecraft.getInstance().execute(TeamClient::open);
+                // 等聊天界面完成关闭后再打开队伍界面。
+                Minecraft.getInstance().schedule(TeamClient::open);
                 return 1;
             }));
     }
