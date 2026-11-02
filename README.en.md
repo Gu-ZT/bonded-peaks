@@ -10,7 +10,7 @@
 
 </div>
 
-**Bonded Peaks** (山河同契) is a lightweight team/party mod for **NeoForge 21.11 / Minecraft 1.21.11**. Create teams, invite friends to join, talk over a team-only chat channel, and let the team owner manage members. All data is persisted with the world save and survives server restarts.
+**Bonded Peaks** (山河同契) is a lightweight team/party mod for **NeoForge 21.11 / Minecraft 26.3**. Create teams, invite friends to join, talk over a team-only chat channel, and let the team owner manage members. All data is persisted with the world save and survives server restarts.
 
 Current version: `0.0.1` (early development)
 
@@ -27,14 +27,14 @@ Current version: `0.0.1` (early development)
 
 | Item | Requirement |
 |---|---|
-| Minecraft | 1.21.11 (declared range `[1.21.11, 1.21.12)`) |
-| NeoForge | 21.11.45 or newer; built with 21.11.48 (declared range `[21.11.45,)`) |
-| Java | JDK 21 required to build |
+| Minecraft | 26.3 (declared range `[26.3, 1.21.12)`) |
+| NeoForge | 26.3.0.100 or newer; built with 26.3.0.100 (declared range `[26.3.0.100,)`) |
+| Java | JDK 25 required to build |
 | Dependencies | AnvilLib (network, config, rendering, integration modules), bundled via JarJar — no separate install |
 
 ## Installation
 
-1. Download `bonded-peaks-1.21.11-<version>.jar` (the main jar only; dependencies are bundled)
+1. Download `bonded-peaks-26.3-<version>.jar` (the main jar only; dependencies are bundled)
 2. Place it into the client's `.minecraft/mods/` folder, or the server's `mods/` folder
 3. Launch the game and type `/bondedpeaks` in chat to see the help
 
@@ -137,7 +137,7 @@ Data is saved automatically on every change; backing up the world save backs up 
 
 ## Building from Source
 
-Requirements: JDK 21 + Git
+Requirements: JDK 25 + Git
 
 构建前请按 [联动构建说明](docs/CONFIG.md) 准备同级 Aleeve Atlas 源码，或传入 `-PaleeveAtlasDir=<源码目录>`。运行时可以单独安装本模组。
 
@@ -149,8 +149,8 @@ cd bonded-peaks
 
 Artifacts land in `build/libs/`:
 
-- `bonded-peaks-1.21.11-<version>.jar` — main jar
-- `bonded-peaks-1.21.11-<version>-sources.jar` — sources jar
+- `bonded-peaks-26.3-<version>.jar` — main jar
+- `bonded-peaks-26.3-<version>-sources.jar` — sources jar
 
 Common dev commands:
 
@@ -189,3 +189,6 @@ A: No. Every command requires an in-game player.
 
 - Code: `GNU LGPL 3.0` (see [`LICENSE`](./LICENSE))
 - Assets: all rights reserved unless explicitly stated (see [`ASSETS_LICENSE`](./ASSETS_LICENSE))
+
+
+本分支 `dev/26.3` 对应 Aleeve Atlas `dev/26.3`。需要以 Atlas 最新源码验证时，使用 `-PaleeveAtlasDir=<源码绝对路径>`，默认构建仍解析可选 Maven API 依赖。

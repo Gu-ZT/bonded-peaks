@@ -3,6 +3,7 @@ package dev.dubhe.bonded.network;
 import dev.dubhe.bonded.BondedPeaks;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 
@@ -12,24 +13,22 @@ import java.util.UUID;
 /** 当前玩家的队伍与邀请快照，在线状态由服务端提供。 */
 public record TeamSnapshot(String name, List<Member> members, List<Invite> invites) implements CustomPacketPayload {
     public static final Type<TeamSnapshot> TYPE = new Type<>(Identifier.fromNamespaceAndPath(BondedPeaks.MOD_ID, "team_snapshot"));
-    public static final StreamCodec<FriendlyByteBuf, TeamSnapshot> CODEC = StreamCodec.of(
-        (buffer, value) -> {
-            buffer.writeUtf(value.name);
-            buffer.writeCollection(value.members, (output, member) -> {
-                output.writeUUID(member.id);
-                output.writeUtf(member.name);
-                output.writeBoolean(member.owner);
-                output.writeBoolean(member.online);
-            });
-            buffer.writeCollection(value.invites, (output, invite) -> {
-                output.writeUtf(invite.team);
-                output.writeUUID(invite.inviterId);
-                output.writeUtf(invite.inviter);
-                output.writeVarInt(invite.remainingSeconds);
-            });
-        }, buffer -> new TeamSnapshot(buffer.readUtf(),
-            buffer.readList(input -> new Member(input.readUUID(), input.readUtf(), input.readBoolean(), input.readBoolean())),
-            buffer.readList(input -> new Invite(input.readUtf(), input.readUUID(), input.readUtf(), input.readVarInt()))));
+    private static final StreamCodec<FriendlyByteBuf, Member> MEMBER_CODEC = StreamCodec.of((buffer, member) -> {
+        buffer.writeUUID(member.id);
+        buffer.writeUtf(member.name);
+        buffer.writeBoolean(member.owner);
+        buffer.writeBoolean(member.online);
+    }, buffer -> new Member(buffer.readUUID(), buffer.readUtf(), buffer.readBoolean(), buffer.readBoolean()));
+    private static final StreamCodec<FriendlyByteBuf, Invite> INVITE_CODEC = StreamCodec.of((buffer, invite) -> {
+        buffer.writeUtf(invite.team);
+        buffer.writeUUID(invite.inviterId);
+        buffer.writeUtf(invite.inviter);
+        buffer.writeVarInt(invite.remainingSeconds);
+    }, buffer -> new Invite(buffer.readUtf(), buffer.readUUID(), buffer.readUtf(), buffer.readVarInt()));
+    public static final StreamCodec<FriendlyByteBuf, TeamSnapshot> CODEC = StreamCodec.composite(
+        ByteBufCodecs.STRING_UTF8, TeamSnapshot::name,
+        MEMBER_CODEC.apply(ByteBufCodecs.list()), TeamSnapshot::members,
+        INVITE_CODEC.apply(ByteBufCodecs.list()), TeamSnapshot::invites, TeamSnapshot::new);
 
     public TeamSnapshot {
         members = List.copyOf(members);

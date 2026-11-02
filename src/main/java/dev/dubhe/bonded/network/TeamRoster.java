@@ -3,6 +3,7 @@ package dev.dubhe.bonded.network;
 import dev.dubhe.bonded.BondedPeaks;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.Nullable;
@@ -17,12 +18,13 @@ import java.util.UUID;
 public final class TeamRoster implements CustomPacketPayload {
     public static final TeamRoster EMPTY = new TeamRoster(List.of());
     public static final Type<TeamRoster> TYPE = new Type<>(Identifier.fromNamespaceAndPath(BondedPeaks.MOD_ID, "team_roster"));
-    public static final StreamCodec<FriendlyByteBuf, TeamRoster> CODEC = StreamCodec.of((buffer, roster) -> {
-        buffer.writeCollection(roster.entries, (output, team) -> {
-            output.writeUtf(team.name);
-            output.writeCollection(team.members, (target, member) -> target.writeUUID(member));
-        });
-    }, buffer -> new TeamRoster(buffer.readList(input -> new Entry(input.readUtf(), input.readList(source -> source.readUUID())))));
+    private static final StreamCodec<FriendlyByteBuf, UUID> PLAYER_CODEC = StreamCodec.of(
+        (buffer, player) -> buffer.writeUUID(player), buffer -> buffer.readUUID());
+    private static final StreamCodec<FriendlyByteBuf, Entry> ENTRY_CODEC = StreamCodec.composite(
+        ByteBufCodecs.STRING_UTF8, Entry::name,
+        PLAYER_CODEC.apply(ByteBufCodecs.list()), Entry::members, Entry::new);
+    public static final StreamCodec<FriendlyByteBuf, TeamRoster> CODEC = ENTRY_CODEC.apply(ByteBufCodecs.list())
+        .map(TeamRoster::new, roster -> roster.entries);
 
     private final List<Entry> entries;
     private final Map<String, Entry> teams;

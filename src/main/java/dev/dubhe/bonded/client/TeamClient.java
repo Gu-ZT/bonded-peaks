@@ -23,7 +23,6 @@ import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,7 @@ import java.util.List;
 public final class TeamClient {
     private static final KeyMapping.Category CATEGORY = new KeyMapping.Category(
         Identifier.fromNamespaceAndPath(BondedPeaks.MOD_ID, "team"));
-    private static final KeyMapping OPEN = new KeyMapping("key.bonded_peaks.open", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, CATEGORY);
+    private static final KeyMapping OPEN = new KeyMapping("key.bonded_peaks.open", InputConstants.Type.KEYBOARD, InputConstants.KEY_G, CATEGORY);
     private static final List<Component> MESSAGES = new ArrayList<>();
     private static String chatTeam = "";
 
@@ -54,16 +53,16 @@ public final class TeamClient {
                 MESSAGES.clear();
                 chatTeam = snapshot.name();
             }
-            if (Minecraft.getInstance().screen instanceof TeamScreen screen) {
+            if (Minecraft.getInstance().gui.screen() instanceof TeamScreen screen) {
                 screen.receive(snapshot);
-            } else if (Minecraft.getInstance().screen instanceof TeamFormScreen form) {
+            } else if (Minecraft.getInstance().gui.screen() instanceof TeamFormScreen form) {
                 form.parent.receive(snapshot);
             }
         });
         event.register(TeamReply.TYPE, (reply, context) -> {
-            if (Minecraft.getInstance().screen instanceof TeamScreen screen) {
+            if (Minecraft.getInstance().gui.screen() instanceof TeamScreen screen) {
                 screen.reply(reply);
-            } else if (Minecraft.getInstance().screen instanceof TeamFormScreen form) {
+            } else if (Minecraft.getInstance().gui.screen() instanceof TeamFormScreen form) {
                 form.reply(reply);
             }
         });
@@ -81,7 +80,7 @@ public final class TeamClient {
     @SubscribeEvent
     public static void tick(ClientTickEvent.Post event) {
         while (OPEN.consumeClick()) {
-            if (Minecraft.getInstance().screen == null) {
+            if (Minecraft.getInstance().gui.screen() == null) {
                 open();
             }
         }
@@ -90,7 +89,7 @@ public final class TeamClient {
     private static void open() {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player != null) {
-            minecraft.setScreen(new TeamScreen());
+            minecraft.gui.setScreen(new TeamScreen());
         }
     }
 
@@ -121,9 +120,9 @@ public final class TeamClient {
                 if (MESSAGES.size() > 100) {
                     MESSAGES.removeFirst();
                 }
-                if (Minecraft.getInstance().screen instanceof TeamScreen screen) {
+                if (Minecraft.getInstance().gui.screen() instanceof TeamScreen screen) {
                     screen.chatReceived(event.getMessage());
-                } else if (Minecraft.getInstance().screen instanceof TeamFormScreen form) {
+                } else if (Minecraft.getInstance().gui.screen() instanceof TeamFormScreen form) {
                     form.parent.chatReceived(event.getMessage());
                 }
             }
