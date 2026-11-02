@@ -11,7 +11,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 @EventBusSubscriber(modid = BondedPeaks.MOD_ID)
 public class BondedPeaksData {
     @SubscribeEvent
-    public static void gatherData(GatherDataEvent.Client event) {
+    public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = generator.getPackOutput();
         generator.addProvider(true, new BondedPeaksLangProvider(packOutput));

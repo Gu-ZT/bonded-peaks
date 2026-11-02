@@ -4,14 +4,14 @@ import dev.dubhe.bonded.BondedPeaks;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 import java.util.UUID;
 
 /** 当前玩家的队伍与邀请快照，在线状态由服务端提供。 */
 public record TeamSnapshot(String name, List<Member> members, List<Invite> invites) implements CustomPacketPayload {
-    public static final Type<TeamSnapshot> TYPE = new Type<>(Identifier.fromNamespaceAndPath(BondedPeaks.MOD_ID, "team_snapshot"));
+    public static final Type<TeamSnapshot> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(BondedPeaks.MOD_ID, "team_snapshot"));
     public static final StreamCodec<FriendlyByteBuf, TeamSnapshot> CODEC = StreamCodec.of(
         (buffer, value) -> {
             buffer.writeUtf(value.name);

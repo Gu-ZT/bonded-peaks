@@ -6,7 +6,7 @@ import dev.dubhe.bonded.team.TeamManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -30,9 +30,12 @@ public final class TeamPackets {
         var registrar = event.registrar("team-ui-1").optional();
         registrar.playToServer(Request.TYPE, Request.CODEC, TeamPackets::snapshot);
         registrar.playToServer(TeamAction.TYPE, TeamAction.CODEC, TeamActions::execute);
-        registrar.playToClient(TeamSnapshot.TYPE, TeamSnapshot.CODEC);
-        registrar.playToClient(TeamReply.TYPE, TeamReply.CODEC);
-        registrar.playToClient(TeamRoster.TYPE, TeamRoster.CODEC);
+        registrar.playToClient(TeamSnapshot.TYPE, TeamSnapshot.CODEC,
+            (payload, context) -> dev.dubhe.bonded.client.TeamClient.receive(payload, context));
+        registrar.playToClient(TeamReply.TYPE, TeamReply.CODEC,
+            (payload, context) -> dev.dubhe.bonded.client.TeamClient.receive(payload, context));
+        registrar.playToClient(TeamRoster.TYPE, TeamRoster.CODEC,
+            (payload, context) -> dev.dubhe.bonded.client.TeamClient.receive(payload, context));
     }
 
     private static void snapshot(Request request, IPayloadContext context) {
@@ -65,7 +68,7 @@ public final class TeamPackets {
 
     /** 不携带目标玩家，防止请求他人的邀请数据。 */
     public record Request() implements CustomPacketPayload {
-        public static final Type<Request> TYPE = new Type<>(Identifier.fromNamespaceAndPath(BondedPeaks.MOD_ID, "team_request"));
+        public static final Type<Request> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(BondedPeaks.MOD_ID, "team_request"));
         public static final StreamCodec<FriendlyByteBuf, Request> CODEC = StreamCodec.unit(new Request());
 
         @Override
