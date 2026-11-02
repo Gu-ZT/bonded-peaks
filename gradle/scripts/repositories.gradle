@@ -1,9 +1,13 @@
 repositories {
+    exclusiveContent {
+        forRepository { maven { url = 'https://server.cjsah.net:1002/maven/releases/' } }
+        filter { includeGroup 'dev.anvilcraft.lib' }
+    }
     mavenLocal()
     maven {
-        url = 'https://server.cjsah.net:1002/maven/'
+        url = 'https://server.cjsah.net:1002/maven/releases/'
         content {
-            includeModule('dev.dubhe.map', 'aleeve_atlas-neoforge-1.21.11')
+            includeModule('dev.dubhe.map', 'aleeve_atlas-neoforge-26.1.2')
         }
     }
     mavenCentral()
