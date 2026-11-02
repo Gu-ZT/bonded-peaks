@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - releases/**
+      - dev/**
     paths:
       - gradle/scripts/**
       - src/**
@@ -16,11 +17,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
+      ORG_GRADLE_PROJECT_aleeveAtlasDir: ${{ github.workspace }}/.temp/aleeve-atlas
       CI_BUILD: true
       PR_BUILD: true
     steps:
       - name: checkout
         uses: actions/checkout@v4
+
+      - name: Checkout Atlas API
+        uses: actions/checkout@v4
+        with:
+          repository: Gu-ZT/aleeve-atlas
+          ref: dev/1.21.11
+          path: .temp/aleeve-atlas
 
       - name: Read Properties
         id: 'properties'

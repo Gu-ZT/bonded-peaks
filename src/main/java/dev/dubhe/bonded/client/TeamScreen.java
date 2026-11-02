@@ -330,11 +330,11 @@ final class TeamScreen extends Screen {
 
     @Override
     public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        graphics.fill(0, 0, this.width, this.height, 0xB0081018);
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        graphics.fill(0, 0, this.width, this.height, 0xB0081018);
         graphics.fill(this.left - 1, this.top - 1, this.right() + 1, this.bottom() + 1, 0xFF53656C);
         graphics.fill(this.left, this.top, this.right(), this.bottom(), 0xF018252F);
         graphics.fill(this.left, this.top, this.right(), this.top + 46, 0xFF243843);

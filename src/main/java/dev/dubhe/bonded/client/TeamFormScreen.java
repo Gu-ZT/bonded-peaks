@@ -196,11 +196,11 @@ final class TeamFormScreen extends Screen {
 
     @Override
     public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        graphics.fill(0, 0, this.width, this.height, 0xC0081018);
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        graphics.fill(0, 0, this.width, this.height, 0xC0081018);
         graphics.fill(this.left - 1, this.top - 1, this.left + this.formWidth + 1, this.top + this.formHeight + 1, 0xFF53656C);
         graphics.fill(this.left, this.top, this.left + this.formWidth, this.top + this.formHeight, 0xFF18252F);
         graphics.fill(this.left, this.top, this.left + this.formWidth, this.top + 2, 0xFF89C9B5);

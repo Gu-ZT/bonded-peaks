@@ -191,3 +191,6 @@ A：不能。所有命令都要求由游戏内玩家执行。
 
 - 代码：`GNU LGPL 3.0`（见 [`LICENSE`](./LICENSE)）
 - 资源：默认保留所有权利，除非另有声明（见 [`ASSETS_LICENSE`](./ASSETS_LICENSE)）
+
+
+本分支 `dev/1.21.11` 对应 Aleeve Atlas `dev/1.21.11`。需要以 Atlas 最新源码验证时，使用 `-PaleeveAtlasDir=<源码绝对路径>`，默认构建仍解析可选 Maven API 依赖。
