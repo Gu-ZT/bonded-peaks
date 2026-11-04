@@ -31,3 +31,7 @@ Atlas 的队友位置、地图增量同步、共享路径点、队伍标点和�
 编译期从 `https://server.cjsah.net:1002/maven/` 解析 `dev.dubhe.map:aleeve_atlas-neoforge-1.21.11:0.0.1+build.+`，运行时仍为可选联动。执行 `./gradlew.bat build --console=plain` 即可构建，持续集成也使用该 Maven 依赖。
 
 开发构建使用 NeoForge 21.11.48。验证最低兼容版本时执行 `./gradlew.bat compileJava test runData '-PneoForgeVersion=21.11.45' --console=plain`。
+
+## 模组图标
+
+模组列表与 README 共用 `src/main/resources/pack.png`，图片尺寸为 256×256。构建时将图片复制到 JAR 根目录，`neoforge.mods.toml` 通过 `logoFile = "pack.png"` 引用，并设置 `logoBlur = false`，使缩放后的像素边缘保持清晰。

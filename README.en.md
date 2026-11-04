@@ -4,9 +4,9 @@
 
 # Bonded Peaks
 
-**Sworn by the mountains and rivers, bonded as one team.**
+**Team management and private team chat for Minecraft.**
 
-[简体中文](README.md) | English
+English | [简体中文](README.md)
 
 </div>
 
