@@ -1,12 +1,12 @@
 <div align="center">
 
-<img src="src/main/resources/pack.png" width="256" height="256" alt="山河同契 图标">
+<img src="src/main/resources/pack.png" width="256" height="256" alt="山河同契图标">
 
-# 山河同契
+# 山河同契 Bonded Peaks
 
-**以山河为契，结同袍之队。**
+**Minecraft 队伍管理与队伍聊天模组。**
 
-简体中文 | [English](README.en.md)
+[English](README.en.md) | 简体中文
 
 </div>
 

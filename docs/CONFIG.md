@@ -34,3 +34,7 @@ Atlas 的队友位置、地图增量同步、共享路径点、队伍标点和�
 
 
 本分支 `dev/1.21.4` 对应 Aleeve Atlas `dev/1.21.4`。需要以 Atlas 最新源码验证时，使用 `-PaleeveAtlasDir=<源码绝对路径>`，默认构建仍解析可选 Maven API 依赖。
+
+## 模组图标
+
+模组列表与 README 共用 `src/main/resources/pack.png`，图片尺寸为 256×256。构建时将图片复制到 JAR 根目录，`neoforge.mods.toml` 通过 `logoFile = "pack.png"` 引用，并设置 `logoBlur = false`，使缩放后的像素边缘保持清晰。
