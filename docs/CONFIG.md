@@ -15,3 +15,7 @@
 固定界面文本必须使用 `Component.translatable(...)`。英文文本在 `BondedPeaksLangProvider` 中定义，通过 `./gradlew.bat runData --console=plain` 生成 `src/generated/resources/assets/bonded_peaks/lang/en_us.json`；简体中文必须手动维护 `src/main/resources/assets/bonded_peaks/lang/zh_cn.json`。
 
 本界面没有新增配置文件或服务端配置项。
+
+## 模组图标
+
+模组列表与 README 共用 `src/main/resources/pack.png`，图片尺寸为 256×256。构建时将图片复制到 JAR 根目录，`neoforge.mods.toml` 通过 `logoFile = "pack.png"` 引用，并设置 `logoBlur = false`，使缩放后的像素边缘保持清晰。
